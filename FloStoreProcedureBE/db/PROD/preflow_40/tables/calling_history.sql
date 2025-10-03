@@ -1,0 +1,21 @@
+CREATE TABLE `calling_history` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `organizer` varchar(255) NOT NULL,
+  `invitee` varchar(255) NOT NULL,
+  `room_url` text NOT NULL,
+  `room_id` text NOT NULL,
+  `call_start_time` double(13,3) DEFAULT NULL,
+  `call_end_time` double(13,3) DEFAULT NULL,
+  `call_type` tinyint(4) DEFAULT NULL,
+  `call_status` tinyint(4) DEFAULT NULL,
+  `is_owner` tinyint(1) DEFAULT '0',
+  `attendees` json NOT NULL,
+  `isOwner` tinyint(1) DEFAULT '0',
+  `created_date` double(13,3) NOT NULL,
+  `updated_date` double(13,3) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_invitee` (`invitee`),
+  FULLTEXT KEY `idx_room_id` (`room_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1

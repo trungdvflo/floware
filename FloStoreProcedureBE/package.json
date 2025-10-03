@@ -1,0 +1,102 @@
+{
+  "name": "andb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "andb.js",
+  "dependencies": {
+    "@aws-sdk/client-ssm": "^3.414.0",
+    "alog-xyz": "^1.0.11",
+    "commander": "^11.0.0",
+    "dotenv": "^16.3.1",
+    "mysql2": "^3.4.2"
+  },
+  "scripts": {
+    "export:local": "node andb export -f LOCAL && node andb export -p LOCAL && node andb export -t LOCAL",
+
+    "export:dev:fn": "node andb export -f DEV",
+    "export:dev:sp": "node andb export -p DEV",
+    "export:dev:tbl": "node andb export -t DEV",
+    "export:dev": "npm run export:dev:fn && npm run export:dev:sp && npm run export:dev:tbl",
+    
+    "export:uat:fn": "node andb export -f UAT",
+    "export:uat:sp": "node andb export -p UAT",
+    "export:uat:tbl": "node andb export -t UAT",
+    "export:uat": "npm run export:uat:fn && npm run export:uat:sp && npm run export:uat:tbl",
+    
+    "export:stage:fn": "node andb export -f STAGE",
+    "export:stage:sp": "node andb export -p STAGE",
+    "export:stage:tbl": "node andb export -t STAGE",
+    "export:stage": "npm run export:stage:fn && npm run export:stage:sp && npm run export:stage:tbl",
+    
+    "export:prod:fn": "node andb export -f PROD",
+    "export:prod:sp": "node andb export -p PROD",
+    "export:prod:tbl": "node andb export -t PROD",
+    "export:prod": "npm run export:prod:fn && npm run export:prod:sp && npm run export:prod:tbl",
+    
+    "export:all": "npm run export:dev && npm run export:uat && npm run export:stage && npm run compare:uat:off && npm run compare:stage:off",
+
+    "compare:dev:fn": "node andb compare -f DEV",
+    "compare:dev:sp": "node andb compare -p DEV",
+    "compare:dev:tbl": "node andb compare -t DEV",
+    "compare:dev:report": " node andb compare -r DEV",
+    "compare:dev:off": "npm run compare:dev:fn && npm run compare:dev:sp && npm run compare:dev:tbl && npm run compare:dev:report",
+
+    "compare:uat:fn": "node andb compare -f UAT",
+    "compare:uat:sp": "node andb compare -p UAT",
+    "compare:uat:tbl": "node andb compare -t UAT",
+    "compare:uat:report": " node andb compare -r UAT",
+    "compare:uat:off": "npm run compare:uat:fn && npm run compare:uat:sp && npm run compare:uat:tbl && npm run compare:uat:report",
+
+    "compare:stage:fn": "node andb compare -f STAGE",
+    "compare:stage:sp": "node andb compare -p STAGE",
+    "compare:stage:tbl": "node andb compare -t STAGE",
+    "compare:stage:report": " node andb compare -r STAGE",
+    "compare:stage:off": "npm run compare:stage:fn && npm run compare:stage:sp && npm run compare:stage:tbl && npm run compare:stage:report",
+
+    "compare:prod:fn": "node andb compare -f PROD",
+    "compare:prod:sp": "node andb compare -p PROD",
+    "compare:prod:tbl": "node andb compare -t PROD",
+    "compare:prod:report": " node andb compare -r PROD",
+    "compare:prod:off": "npm run compare:prod:fn && npm run compare:prod:sp && npm run compare:prod:tbl && npm run compare:prod:report",
+
+    "compare:dev": "npm run export:dev && npm run compare:dev:off",
+    "compare:uat": "npm run export:dev && npm run export:uat && npm run compare:uat:off",
+    "compare:stage": "npm run export:uat && npm run export:stage && npm run compare:stage:off",
+    "compare:prod": "npm run export:stage && npm run export:prod && npm run compare:prod:off",
+
+    "compare:uat:migrated": "npm run export:uat && npm run compare:uat:off",
+    "compare:stage:migrated": "npm run export:stage && npm run compare:stage:off",
+    "compare:prod:migrated": "npm run export:prod && npm run compare:prod:off",
+
+    "migrate:dev": "node andb migrate -f DEV && node andb migrate -p DEV && node andb migrate -t DEV",
+    
+    "migrate:uat:new": "node andb migrate -f UAT && node andb migrate -p UAT && node andb migrate -t UAT",
+    "migrate:uat:updated": "node andb migrate -uf UAT && node andb migrate -up UAT && node andb migrate -ut UAT",
+    "migrate:uat:deprecated": "node andb migrate -df UAT && node andb migrate -dp UAT",
+    
+    "migrate:uat": "npm run compare:uat && npm run migrate:uat:new && npm run migrate:uat:updated && npm run compare:uat:migrated",
+    
+    "migrate:stage:new": "node andb migrate -f STAGE && node andb migrate -p STAGE && node andb migrate -t STAGE",
+    "migrate:stage:updated": "node andb migrate -uf STAGE && node andb migrate -up STAGE && node andb migrate -ut STAGE",
+    "migrate:stage:deprecated": "node andb migrate -df STAGE && node andb migrate -dp STAGE",
+
+    "migrate:stage": "npm run compare:stage:off && npm run migrate:stage:new && npm run migrate:stage:updated && npm run compare:stage:migrated",
+    
+    "migrate:prod:new": "node andb migrate -f PROD && node andb migrate -p PROD && node andb migrate -t PROD",
+    "migrate:prod:updated": "node andb migrate -uf PROD && node andb migrate -up PROD && node andb migrate -ut PROD",
+    "migrate:prod:deprecated": "node andb migrate -df PROD && node andb migrate -dp PROD",
+
+    "migrate:prod": "npm run compare:prod:off && npm run migrate:prod:new && npm run migrate:prod:updated && npm run compare:prod:migrated"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeftCoastLogic/FloStoreProcedureBE.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LeftCoastLogic/FloStoreProcedureBE/issues"
+  },
+  "homepage": "https://github.com/LeftCoastLogic/FloStoreProcedureBE#readme"
+}

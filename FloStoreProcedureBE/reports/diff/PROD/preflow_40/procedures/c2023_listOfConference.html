@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.0">
+<meta name="plugin-version" content="vim9.0_v1">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=fallback">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.Folded { color: #0000c0; background-color: #a8a8a8; padding-bottom: 1px; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>db/STAGE/preflow_40/procedures/c2023_listOfConference.sql</th>
+<th>db/PROD/preflow_40/procedures/c2023_listOfConference.sql</th>
+</tr><tr>
+<td><div>
+<pre>
+<span class="Folded">+--  9 lines: CREATE PROCEDURE `c2023_listOfConference`(pvKeyword         TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci</span>
+                                                            ,pnMinId           BIGINT(20)
+                                                            ,pnVip             TINYINT(1)
+                                                            ,pnPageSize        INTEGER(11)
+                                                            ,pnPageNo          INTEGER(11)
+                                                            ,pvSort            VARCHAR(128))
+BEGIN
+<span class="DiffChange">  --</span><span class="DiffText"> DEPRECATED</span><span class="DiffChange">                                                                 </span>
+  DECLARE nOFFSET     INT(11) DEFAULT 0;
+  DECLARE vSort       VARCHAR(50) DEFAULT IF(IFNULL(pvSort, '') &lt;&gt; '' -- DEFAULT +: ASC
+                                               AND NOT instr(pvSort, '-')
+                                               AND NOT instr(pvSort, '+'), concat('+', pvSort), ifnull(pvSort, '-start_time'));
+  DECLARE vFieldSort  VARCHAR(50) DEFAULT REPLACE(REPLACE(IFNULL(vSort, ''), '-', ''), '+', '');
+  DECLARE vKeyword    TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT ifnull(pvKeyword, '');
+<span class="Folded">+--  5 lines: DECLARE vKeyword1   TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;</span>
+  SET vKeyword2 = CONCAT('( ',vKeyword,')|(^',vKeyword,')|(@',vKeyword,')');
+  --
+  SET nOFFSET = IF(ifnull(pnPageNo, 0) &gt; 0, (pnPageNo - 1) * pnPageSize, 0);
+  --
+  SET SESSION group_concat_max_len = 500000;
+  --
+<span class="DiffChange">  SELECT cm.id, cm.channel_id, c</span><span class="DiffText">c</span><span class="DiffChange">.uid, cm.email, cm.is_creator, cm.description  </span>
+<span class="DiffChange">        ,cm.vip, cm.revoke_time, cm.updated_date, cm.created_date</span><span class="DiffText">, cm.join_time, cm.view_chat_history</span>
+<span class="DiffChange">        ,cc.room_url, </span><span class="DiffText">cc.enable_chat_history, COALESCE(cm.title, cc.title, '')</span><span class="DiffChange"> title</span>
+        ,ch.start_time, ch.end_time, ch.action_time, ch.status, ch.type
+        ,CONCAT('[',GROUP_CONCAT(DISTINCT
+                      JSON_OBJECT(
+                        'id', cm1.id
+                       ,'email',cm1.email
+                       ,'is_creator', cm1.is_creator
+<span class="Folded">+--  5 lines: ,'revoke_time', cm1.revoke_time-----------------------------------</span>
+LEFT JOIN conference_member cm1 ON (cc.id = cm1.channel_id)
+LEFT JOIN (SELECT ch.member_id, ch.user_id
+                   ,ch.start_time, ch.end_time, ch.action_time, ch.status, ch.type
+               FROM conference_history ch
+              WHERE ch.user_id = pnUserId
+                AND ch.id = (SELECT MAX(id)
+<span class="DiffChange">                               FROM conference_history ch1</span><span class="DiffChange">                      </span>
+<span class="DiffChange">                              WHERE ch1.user_id = pnUserId</span><span class="DiffChange">                      </span>
+<span class="DiffChange">                                AND ch1.member_id = ch.member_id</span><span class="DiffChange">                </span>
+<span class="DiffChange">                              )</span><span class="DiffChange">                                                 </span>
+<span class="DiffChange">                          ) ch ON (cm.id = ch.member_id AND cm.user_id = ch.user_id)</span>
+<span class="DiffChange">LEFT JOIN linked_collection_object lco ON (c</span><span class="DiffText">c.uid = lco.object_uid</span><span class="DiffChange">              </span>
+<span class="DiffAdd">                                           AND cm.user_id = lco.user_id </span><span class="DiffAdd">        </span>
+<span class="DiffAdd">                                           AND lco.object_type = 'CONFERENCING' </span>
+                                           AND (pvColIds IS NULL OR ifnull(lco.collection_id, 0) &gt; 0))
+    WHERE cm.user_id = pnUserId
+      AND (cm.revoke_time = 0 -- NOT revoked
+           OR (cm.revoke_time &gt; 0 AND cm.user_id = pnUserId)) -- revoked but me
+      AND (cm1.revoke_time = 0 -- NOT revoked
+           OR (cm1.revoke_time &gt; 0 AND cm1.user_id = pnUserId)) -- revoked but me
+<span class="Folded">+-- 86 lines: AND cm.updated_date  &lt;  IF(ifnull(pnModifiedLT, 0) &gt; 0, pnModifiedLT, unix_timestamp() + 1)</span>
+           WHEN NOT isnull(pnModifiedLT) THEN cm.updated_date
+           --
+           WHEN isnull(pnMinId) AND INSTR(vSort, &quot;-&quot;) THEN
+             --
+             CASE vFieldSort
+               --
+<span class="DiffChange">               WHEN 'start_time'   THEN GREATEST(ifnull(ch.start_time, 0), c</span><span class="DiffText">c</span><span class="DiffChange">.created_date)</span>
+               WHEN 'action_time'  THEN ch.action_time
+               WHEN 'created_date' THEN cm.created_date
+               WHEN 'title'        THEN ifnull(cm.title, cc.title)
+               --
+              END
+            --
+<span class="Folded">+--  8 lines: END) DESC---------------------------------------------------------</span>
+</pre>
+</div></td>
+<td><div>
+<pre>
+<span class="Folded">+--  9 lines: CREATE PROCEDURE `c2023_listOfConference`(pvKeyword         TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci</span>
+                                                            ,pnMinId           BIGINT(20)
+                                                            ,pnVip             TINYINT(1)
+                                                            ,pnPageSize        INTEGER(11)
+                                                            ,pnPageNo          INTEGER(11)
+                                                            ,pvSort            VARCHAR(128))
+BEGIN
+<span class="DiffChange">  --</span><span class="DiffChange">                                                                            </span>
+  DECLARE nOFFSET     INT(11) DEFAULT 0;
+  DECLARE vSort       VARCHAR(50) DEFAULT IF(IFNULL(pvSort, '') &lt;&gt; '' -- DEFAULT +: ASC
+                                               AND NOT instr(pvSort, '-')
+                                               AND NOT instr(pvSort, '+'), concat('+', pvSort), ifnull(pvSort, '-start_time'));
+  DECLARE vFieldSort  VARCHAR(50) DEFAULT REPLACE(REPLACE(IFNULL(vSort, ''), '-', ''), '+', '');
+  DECLARE vKeyword    TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT ifnull(pvKeyword, '');
+<span class="Folded">+--  5 lines: DECLARE vKeyword1   TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;</span>
+  SET vKeyword2 = CONCAT('( ',vKeyword,')|(^',vKeyword,')|(@',vKeyword,')');
+  --
+  SET nOFFSET = IF(ifnull(pnPageNo, 0) &gt; 0, (pnPageNo - 1) * pnPageSize, 0);
+  --
+  SET SESSION group_concat_max_len = 500000;
+  --
+<span class="DiffChange">  SELECT cm.id, cm.channel_id, c</span><span class="DiffText">m</span><span class="DiffChange">.uid, cm.email, cm.is_creator, cm.description  </span>
+<span class="DiffChange">        ,cm.vip, cm.revoke_time, cm.updated_date, cm.created_date</span><span class="DiffChange">               </span>
+<span class="DiffChange">        ,cc.room_url, </span><span class="DiffText">COALESCE(cm.title, cc.title, '') AS</span><span class="DiffChange"> title                 </span>
+        ,ch.start_time, ch.end_time, ch.action_time, ch.status, ch.type
+        ,CONCAT('[',GROUP_CONCAT(DISTINCT
+                      JSON_OBJECT(
+                        'id', cm1.id
+                       ,'email',cm1.email
+                       ,'is_creator', cm1.is_creator
+<span class="Folded">+--  5 lines: ,'revoke_time', cm1.revoke_time-----------------------------------</span>
+LEFT JOIN conference_member cm1 ON (cc.id = cm1.channel_id)
+LEFT JOIN (SELECT ch.member_id, ch.user_id
+                   ,ch.start_time, ch.end_time, ch.action_time, ch.status, ch.type
+               FROM conference_history ch
+              WHERE ch.user_id = pnUserId
+                AND ch.id = (SELECT MAX(id)
+<span class="DiffChange">                               </span><span class="DiffText">          </span><span class="DiffChange">FROM conference_history ch1            </span>
+<span class="DiffChange">                              </span><span class="DiffText">          </span><span class="DiffChange">WHERE ch1.user_id = pnUserId            </span>
+<span class="DiffChange">                                </span><span class="DiffText">          </span><span class="DiffChange">AND ch1.member_id = ch.member_id      </span>
+<span class="DiffChange">                              </span><span class="DiffText">            </span><span class="DiffChange">)                                     </span>
+<span class="DiffChange">                          </span><span class="DiffText">            </span><span class="DiffChange">) ch ON (cm.id = ch.member_id AND cm.user_id = ch.user_id)</span>
+<span class="DiffChange">LEFT JOIN linked_collection_object lco ON (c</span><span class="DiffText">m.uid = lco.object_uid AND lco.object_type = 'CONFERENCING'</span><span class="DiffChange"> </span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+                                           AND (pvColIds IS NULL OR ifnull(lco.collection_id, 0) &gt; 0))
+    WHERE cm.user_id = pnUserId
+      AND (cm.revoke_time = 0 -- NOT revoked
+           OR (cm.revoke_time &gt; 0 AND cm.user_id = pnUserId)) -- revoked but me
+      AND (cm1.revoke_time = 0 -- NOT revoked
+           OR (cm1.revoke_time &gt; 0 AND cm1.user_id = pnUserId)) -- revoked but me
+<span class="Folded">+-- 86 lines: AND cm.updated_date  &lt;  IF(ifnull(pnModifiedLT, 0) &gt; 0, pnModifiedLT, unix_timestamp() + 1)</span>
+           WHEN NOT isnull(pnModifiedLT) THEN cm.updated_date
+           --
+           WHEN isnull(pnMinId) AND INSTR(vSort, &quot;-&quot;) THEN
+             --
+             CASE vFieldSort
+               --
+<span class="DiffChange">               WHEN 'start_time'   THEN GREATEST(ifnull(ch.start_time, 0), c</span><span class="DiffText">m</span><span class="DiffChange">.created_date)</span>
+               WHEN 'action_time'  THEN ch.action_time
+               WHEN 'created_date' THEN cm.created_date
+               WHEN 'title'        THEN ifnull(cm.title, cc.title)
+               --
+              END
+            --
+<span class="Folded">+--  8 lines: END) DESC---------------------------------------------------------</span>
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+

@@ -1,0 +1,88 @@
+CREATE PROCEDURE `c2022_createComment`(nID                  BIGINT(20)
+                                                         ,collectionId         BIGINT(20)
+                                                         ,objectUid            VARBINARY(1000)
+                                                         ,objectHref           TEXT
+                                                         ,objectType           VARBINARY(50)
+                                                         ,nUserId              BIGINT(20)
+                                                         ,nActionTime           DOUBLE(13,3)
+                                                         ,vComment             TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+                                                         ,parentId             BIGINT(20) 
+                                                         ,createdDate          DOUBLE(13,3)
+                                                         ,updatedDate          DOUBLE(13,3))
+sp_createComment: BEGIN
+  --
+  DECLARE nCommentID    BIGINT(20) DEFAULT 0;
+  DECLARE nCollectionId BIGINT(20) DEFAULT 0;
+  DECLARE vobjectUid    VARBINARY(1000) DEFAULT '';
+  DECLARE nCAID         BIGINT(20) DEFAULT 0;
+  DECLARE vEmail        VARCHAR(255);
+  DECLARE nOwnerID      BIGINT(20);
+  DECLARE nMemberID     BIGINT(20);
+  DECLARE nPermission   TINYINT(1);
+  --
+  START TRANSACTION;
+  --
+  IF ifnull(nID, 0) > 0 THEN
+    --
+    SET nCommentID = c2022_updateComment(nID, nUserId, nActionTime, vComment, updatedDate);
+    --
+  ELSE
+    --
+    SET nCommentID = c2022_createComment(collectionId, objectUid, objectType
+                            ,nUserId, nActionTime, vComment, parentId, createdDate, updatedDate);
+    --
+  END IF;
+  --
+  COMMIT;
+  --
+  IF ifnull(nCommentID, 0) < 1 THEN
+    --
+      SELECT nCommentID id;
+      LEAVE sp_createComment;
+    --
+  END IF;
+    
+  -- RETURN value
+  SELECT ca.collection_id, ca.object_uid, ca.object_type, ca.object_href
+        ,cc.id, cc.collection_activity_id
+        ,cc.email, cc.action, cc.action_time
+        ,cc.comment, cc.parent_id
+        ,cc.created_date, cc.updated_date
+        ,co.user_id owner_user_id
+        ,csm.calendar_uri member_calendar_uri
+        ,csm.shared_email member_email
+        ,co.calendar_uri owner_calendar_uri
+        ,u.username owner_username
+    FROM collection_comment cc
+    JOIN collection_activity ca ON (ca.id = cc.collection_activity_id)
+    JOIN collection co ON (ca.collection_id = co.id)
+    LEFT JOIN collection_shared_member csm ON (co.id = csm.collection_id)
+    JOIN user u ON (u.id = co.user_id)
+   WHERE cc.id = nCommentID
+     AND (co.user_id = nUserId
+           OR csm.member_user_id = nUserId)
+     AND co.id = CASE 
+                   WHEN ifnull(collectionId, 0) = 0 
+                   THEN ca.collection_id ELSE collectionId 
+                  END
+        GROUP BY cc.id
+       UNION
+      SELECT ca.collection_id, ca.object_uid, ca.object_type, ca.object_href
+        ,cc.id, cc.collection_activity_id
+        ,cc.email, cc.action, cc.action_time
+        ,cc.comment, cc.parent_id
+        ,cc.created_date, cc.updated_date
+        ,0 owner_user_id
+        ,'' member_calendar_uri
+        ,'' member_email
+        ,'' owner_calendar_uri
+        ,u.username owner_username
+    FROM collection_comment cc
+    JOIN collection_activity ca ON (ca.id = cc.collection_activity_id)
+    JOIN user u ON (u.id = ca.user_id)
+   WHERE cc.id = nCommentID
+     AND ca.collection_id = 0
+     AND ca.user_id = nUserId
+    GROUP BY cc.id;
+--
+END

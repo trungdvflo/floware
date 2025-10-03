@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.0">
+<meta name="plugin-version" content="vim9.0_v2">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=none">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.Folded { color: #0000c0; background-color: #a8a8a8; padding-bottom: 1px; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>db/DEV/preflow_40/procedures/c2023_getListCommentV4.sql</th>
+<th>db/UAT/preflow_uat_40/procedures/c2023_getListCommentV4.sql</th>
+</tr><tr>
+<td><div>
+<pre>
+<span class="Folded">+-- 68 lines: CREATE PROCEDURE `c2023_getListCommentV4`(pnCollectionId  BIGINT(20)</span>
+LEFT JOIN linked_file_common lfc ON (lfc.source_id = cm.id AND lfc.user_id = cm.user_id)
+LEFT JOIN file_common fc ON (lfc.file_common_id = fc.id AND lfc.source_type = 'COMMENT')
+-- comment mention
+LEFT JOIN comment_mention cm1 ON (cm1.comment_id = cm.id)
+LEFT JOIN mention_user mu ON (cm1.mention_user_id = mu.id)
+     JOIN (
+<span class="DiffChange">         -- owner existed collection_id</span><span class="DiffChange">                                         </span>
+          SELECT co.id collection_id, co.calendar_uri owner_calendar_uri, co.user_id owner_user_id
+                ,'' member_calendar_uri, '' member_email
+                ,0 member_user_id
+                ,usr.username owner_username
+                ,lco.object_uid
+            FROM collection co
+            JOIN linked_collection_object lco ON (lco.collection_id = co.id)
+            JOIN user usr ON (co.user_id = usr.id)
+<span class="DiffChange">           WHERE </span><span class="DiffText">IF(pnCollectionId IS NOT NULL, co.id = pnCollectionId, 1</span><span class="DiffChange">)      </span>
+             AND (co.`type` = 3 OR (pnCollectionId &gt; 0 OR pvObjectUid &lt;&gt; '')) -- owner GET BY uid? dont need TO share
+             AND co.user_id = pnUserId
+<span class="DiffAdd">          UNION</span><span class="DiffAdd">                                                                 </span>
+          -- member existed collection_id
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+          SELECT co.id collection_id, co.calendar_uri owner_calendar_uri, co.user_id owner_user_id
+                ,csm.calendar_uri member_calendar_uri, csm.shared_email member_email
+                ,csm.member_user_id
+                ,usr.username owner_username
+                ,lco.object_uid
+            FROM collection co
+            JOIN user usr ON (co.user_id = usr.id)
+            JOIN collection_shared_member csm ON (csm.collection_id = co.id AND csm.shared_status = 1)
+            JOIN linked_collection_object lco ON (lco.collection_id = co.id)
+<span class="DiffChange">           WHERE </span><span class="DiffText">IF(pnCollectionId IS NOT NULL, co.id = pnCollectionId, 1</span><span class="DiffChange">)      </span>
+             AND co.is_trashed = 0
+             AND lco.is_trashed = 0
+             AND csm.member_user_id = pnUserId
+             AND co.type = 3 -- share only
+          -- omni
+           UNION
+<span class="Folded">+-- 54 lines: SELECT 0 collection_id, '' owner_calendar_uri, pnUserId owner_user_id</span>
+</pre>
+</div></td>
+<td><div>
+<pre>
+<span class="Folded">+-- 68 lines: CREATE PROCEDURE `c2023_getListCommentV4`(pnCollectionId  BIGINT(20)</span>
+LEFT JOIN linked_file_common lfc ON (lfc.source_id = cm.id AND lfc.user_id = cm.user_id)
+LEFT JOIN file_common fc ON (lfc.file_common_id = fc.id AND lfc.source_type = 'COMMENT')
+-- comment mention
+LEFT JOIN comment_mention cm1 ON (cm1.comment_id = cm.id)
+LEFT JOIN mention_user mu ON (cm1.mention_user_id = mu.id)
+     JOIN (
+<span class="DiffChange">         </span><span class="DiffText"> </span><span class="DiffChange">-- owner existed collection_id                                        </span>
+          SELECT co.id collection_id, co.calendar_uri owner_calendar_uri, co.user_id owner_user_id
+                ,'' member_calendar_uri, '' member_email
+                ,0 member_user_id
+                ,usr.username owner_username
+                ,lco.object_uid
+            FROM collection co
+            JOIN linked_collection_object lco ON (lco.collection_id = co.id)
+            JOIN user usr ON (co.user_id = usr.id)
+<span class="DiffChange">           WHERE </span><span class="DiffText">co.id      = IF(ifnull(pnCollectionId, 0) &gt; 0, pnCollectionId, co.id</span><span class="DiffChange">)</span>
+             AND (co.`type` = 3 OR (pnCollectionId &gt; 0 OR pvObjectUid &lt;&gt; '')) -- owner GET BY uid? dont need TO share
+             AND co.user_id = pnUserId
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+          -- member existed collection_id
+<span class="DiffAdd">          UNION</span><span class="DiffAdd">                                                                 </span>
+          SELECT co.id collection_id, co.calendar_uri owner_calendar_uri, co.user_id owner_user_id
+                ,csm.calendar_uri member_calendar_uri, csm.shared_email member_email
+                ,csm.member_user_id
+                ,usr.username owner_username
+                ,lco.object_uid
+            FROM collection co
+            JOIN user usr ON (co.user_id = usr.id)
+            JOIN collection_shared_member csm ON (csm.collection_id = co.id AND csm.shared_status = 1)
+            JOIN linked_collection_object lco ON (lco.collection_id = co.id)
+<span class="DiffChange">           WHERE </span><span class="DiffText">co.id = IF(ifnull(pnCollectionId, 0) &gt; 0, pnCollectionId, co.id</span><span class="DiffChange">)</span>
+             AND co.is_trashed = 0
+             AND lco.is_trashed = 0
+             AND csm.member_user_id = pnUserId
+             AND co.type = 3 -- share only
+          -- omni
+           UNION
+<span class="Folded">+-- 54 lines: SELECT 0 collection_id, '' owner_calendar_uri, pnUserId owner_user_id</span>
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+

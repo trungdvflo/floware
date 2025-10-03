@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.0">
+<meta name="plugin-version" content="vim9.0_v2">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=none">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.Folded { color: #0000c0; background-color: #a8a8a8; padding-bottom: 1px; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>db/DEV/preflow_40/functions/c2022_deleteActivityByUID.sql</th>
+<th>db/UAT/preflow_uat_40/functions/c2022_deleteActivityByUID.sql</th>
+</tr><tr>
+<td><div>
+<pre>
+<span class="Folded">+-- 40 lines: CREATE FUNCTION `c2022_deleteActivityByUID`(pvUid            VARBINARY(1000)</span>
+    # main DELETE
+    IF vTable = 'activity' THEN
+      --
+       DELETE FROM collection_activity
+        WHERE id  = nID;
+      --
+<span class="DiffChange">      SET nReturn = </span><span class="DiffText">d2022</span><span class="DiffChange">_generateDeletedItemSharedOmni('COLLECTION_ACTIVITY', nCollectionId, nID, pnDeleteDate, nUserId);</span>
+      --
+    ELSEIF vTable = 'comment' THEN
+      --
+      DELETE FROM collection_comment
+       WHERE id  = nID;
+      --
+<span class="DiffChange">      SET nReturn = </span><span class="DiffText">d2022</span><span class="DiffChange">_generateDeletedItemSharedOmni('COLLECTION_COMMENT', nCollectionId, nID, pnDeleteDate, nUserId);</span>
+      --
+    ELSEIF vTable = 'history' THEN
+      --
+      DELETE FROM collection_history
+       WHERE id  = nID;
+      --
+<span class="DiffChange">      SET nReturn = </span><span class="DiffText">d2022</span><span class="DiffChange">_generateDeletedItemSharedOmni('COLLECTION_HISTORY', nCollectionId, nID, pnDeleteDate, nUserId);</span>
+      --
+    END IF;
+    SET nCount = nCount + 1;
+    # main DELETE
+  END LOOP link_loop;
+  --
+<span class="Folded">+--  3 lines: RETURN nCount;----------------------------------------------------</span>
+</pre>
+</div></td>
+<td><div>
+<pre>
+<span class="Folded">+-- 40 lines: CREATE FUNCTION `c2022_deleteActivityByUID`(pvUid            VARBINARY(1000)</span>
+    # main DELETE
+    IF vTable = 'activity' THEN
+      --
+       DELETE FROM collection_activity
+        WHERE id  = nID;
+      --
+<span class="DiffChange">      SET nReturn = </span><span class="DiffText">collection</span><span class="DiffChange">_generateDeletedItemSharedOmni('COLLECTION_ACTIVITY', nCollectionId, nID, pnDeleteDate, nUserId);</span>
+      --
+    ELSEIF vTable = 'comment' THEN
+      --
+      DELETE FROM collection_comment
+       WHERE id  = nID;
+      --
+<span class="DiffChange">      SET nReturn = </span><span class="DiffText">collection</span><span class="DiffChange">_generateDeletedItemSharedOmni('COLLECTION_COMMENT', nCollectionId, nID, pnDeleteDate, nUserId);</span>
+      --
+    ELSEIF vTable = 'history' THEN
+      --
+      DELETE FROM collection_history
+       WHERE id  = nID;
+      --
+<span class="DiffChange">      SET nReturn = </span><span class="DiffText">collection</span><span class="DiffChange">_generateDeletedItemSharedOmni('COLLECTION_HISTORY', nCollectionId, nID, pnDeleteDate, nUserId);</span>
+      --
+    END IF;
+    SET nCount = nCount + 1;
+    # main DELETE
+  END LOOP link_loop;
+  --
+<span class="Folded">+--  3 lines: RETURN nCount;----------------------------------------------------</span>
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.0">
+<meta name="plugin-version" content="vim9.0_v2">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=none">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.Folded { color: #0000c0; background-color: #a8a8a8; padding-bottom: 1px; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>db/DEV/preflow_40/procedures/n2023_listOfNotificationOutdated.sql</th>
+<th>db/UAT/preflow_uat_40/procedures/n2023_listOfNotificationOutdated.sql</th>
+</tr><tr>
+<td><div>
+<pre>
+CREATE PROCEDURE `n2023_listOfNotificationOutdated`(
+ pnCollectionID BIGINT(20)
+,pnOffset       INT
+,pnLimit        INT)
+BEGIN
+  --
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+  DECLARE nNOW_AT_1AM INT DEFAULT UNIX_TIMESTAMP(DATE_FORMAT(NOW(), '%Y-%m-%d 01:00:00'));
+  -- owner
+(SELECT cn.id, co.user_id user_id
+       ,st.notification_clean_date, cn.created_date, nNOW_AT_1AM - st.notification_clean_date vtime
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+   FROM user uu
+   JOIN setting st ON (st.user_id = uu.id)
+   JOIN collection co ON (st.user_id = co.user_id)
+   JOIN collection_notification cn ON (cn.collection_id = co.id)
+LEFT JOIN user_notification un ON (cn.id = un.collection_notification_id AND un.user_id = co.user_id)
+      -- 1. immediately DELETE via worker collection
+<span class="DiffChange">    WHERE </span><span class="DiffText">co.id = ifnull(pnCollectionID, co.id)</span><span class="DiffChange">                                 </span>
+      -- 2. clean WHEN reach setting time LIMIT
+<span class="DiffChange">      </span><span class="DiffText">AND cn.created_date &lt; nNOW_AT_1AM - IF(isnull(pnCollectionID), 0,</span><span class="DiffChange"> st.notification_clean_date)</span>
+      AND st.notification_clean_date &gt; 0 -- 0: keep forever
+      AND un.deleted_date IS NULL
+      AND co.type = 3 -- shared only
+    GROUP BY cn.id, co.user_id
+    ORDER BY cn.created_date
+ )
+UNION ALL
+ -- member
+  (SELECT cn.id, csm.member_user_id user_id
+<span class="DiffChange">     ,st.notification_clean_date, cn.created_date, nNOW_AT_1AM - st.notification_clean_date vtime</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+     FROM user uu
+     JOIN setting st ON (st.user_id = uu.id)
+     JOIN collection_shared_member csm ON (st.user_id = csm.member_user_id)
+     JOIN collection_notification cn ON (cn.collection_id = csm.collection_id)
+LEFT JOIN user_notification un ON (cn.id = un.collection_notification_id AND un.user_id = csm.member_user_id)
+<span class="DiffChange">     </span><span class="DiffText"> </span><span class="DiffChange">-- 1. immediately DELETE via worker collection                            </span>
+<span class="DiffChange">    WHERE </span><span class="DiffText">csm.collection_id = ifnull(pnCollectionID, csm.collection_id)</span><span class="DiffChange">         </span>
+<span class="DiffChange">     </span><span class="DiffText"> </span><span class="DiffChange">-- 2. clean WHEN reach setting time LIMIT                                 </span>
+<span class="DiffChange">      </span><span class="DiffText">AND cn.created_date &lt; nNOW_AT_1AM - IF(isnull(pnCollectionID), 0,</span><span class="DiffChange"> st.notification_clean_date)</span>
+      AND st.notification_clean_date &gt; 0 -- 0: keep forever
+      AND un.deleted_date IS NULL
+    GROUP BY cn.id, csm.member_user_id
+    ORDER BY cn.created_date
+ )
+ LIMIT pnLimit
+<span class="Folded">+--  3 lines: offset pnOffset;--------------------------------------------------</span>
+</pre>
+</div></td>
+<td><div>
+<pre>
+CREATE PROCEDURE `n2023_listOfNotificationOutdated`(
+ pnCollectionID BIGINT(20)
+,pnOffset       INT
+,pnLimit        INT)
+BEGIN
+  --
+<span class="DiffAdd">  DECLARE nCollectionID BIGINT(20) DEFAULT ifnull(pnCollectionID, 0);</span><span class="DiffAdd">           </span>
+  DECLARE nNOW_AT_1AM INT DEFAULT UNIX_TIMESTAMP(DATE_FORMAT(NOW(), '%Y-%m-%d 01:00:00'));
+  -- owner
+(SELECT cn.id, co.user_id user_id
+       ,st.notification_clean_date, cn.created_date, nNOW_AT_1AM - st.notification_clean_date vtime
+<span class="DiffAdd">       ,pnCollectionID,nNOW_AT_1AM, st.user_id</span><span class="DiffAdd">                                  </span>
+<span class="DiffAdd">       ,cn.created_date &lt; nNOW_AT_1AM - IF(isnull(pnCollectionID), 0, st.notification_clean_date) time_limit</span>
+   FROM user uu
+   JOIN setting st ON (st.user_id = uu.id)
+   JOIN collection co ON (st.user_id = co.user_id)
+   JOIN collection_notification cn ON (cn.collection_id = co.id)
+LEFT JOIN user_notification un ON (cn.id = un.collection_notification_id AND un.user_id = co.user_id)
+      -- 1. immediately DELETE via worker collection
+<span class="DiffChange">    WHERE </span><span class="DiffText">(co.id = nCollectionID</span><span class="DiffChange">                                                </span>
+      -- 2. clean WHEN reach setting time LIMIT
+<span class="DiffChange">      </span><span class="DiffText">    OR cn.created_date &lt; nNOW_AT_1AM -</span><span class="DiffChange"> st.notification_clean_date)        </span>
+      AND st.notification_clean_date &gt; 0 -- 0: keep forever
+      AND un.deleted_date IS NULL
+      AND co.type = 3 -- shared only
+    GROUP BY cn.id, co.user_id
+    ORDER BY cn.created_date
+ )
+UNION ALL
+ -- member
+  (SELECT cn.id, csm.member_user_id user_id
+<span class="DiffChange">     </span><span class="DiffText">    </span><span class="DiffChange">,st.notification_clean_date, cn.created_date, nNOW_AT_1AM - st.notification_clean_date vtime</span>
+<span class="DiffAdd">         ,pnCollectionID,nNOW_AT_1AM, st.user_id</span><span class="DiffAdd">                                </span>
+<span class="DiffAdd">         ,cn.created_date &lt; nNOW_AT_1AM - IF(isnull(pnCollectionID), 0, st.notification_clean_date) time_limit</span>
+     FROM user uu
+     JOIN setting st ON (st.user_id = uu.id)
+     JOIN collection_shared_member csm ON (st.user_id = csm.member_user_id)
+     JOIN collection_notification cn ON (cn.collection_id = csm.collection_id)
+LEFT JOIN user_notification un ON (cn.id = un.collection_notification_id AND un.user_id = csm.member_user_id)
+<span class="DiffChange">     -- 1. immediately DELETE via worker collection</span><span class="DiffChange">                             </span>
+<span class="DiffChange">    WHERE </span><span class="DiffText">(csm.collection_id = nCollectionID</span><span class="DiffChange">                                    </span>
+<span class="DiffChange">     -- 2. clean WHEN reach setting time LIMIT</span><span class="DiffChange">                                  </span>
+<span class="DiffChange">      </span><span class="DiffText">    OR cn.created_date &lt; nNOW_AT_1AM -</span><span class="DiffChange"> st.notification_clean_date)        </span>
+      AND st.notification_clean_date &gt; 0 -- 0: keep forever
+      AND un.deleted_date IS NULL
+    GROUP BY cn.id, csm.member_user_id
+    ORDER BY cn.created_date
+ )
+ LIMIT pnLimit
+<span class="Folded">+--  3 lines: offset pnOffset;--------------------------------------------------</span>
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+

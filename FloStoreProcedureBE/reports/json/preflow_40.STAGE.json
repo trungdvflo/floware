@@ -1,0 +1,34 @@
+{
+  "columns": {
+    "missing": {
+      "realtime_message_attachment": [
+        "name"
+      ]
+    },
+    "updated": 1
+  },
+  "functions": {
+    "deprecated": 0,
+    "new": 0,
+    "ote": 2,
+    "total": 111,
+    "updated": 1
+  },
+  "indexes": {
+    "updated": 2
+  },
+  "procedures": {
+    "deprecated": 2,
+    "new": 2,
+    "ote": 0,
+    "total": 52,
+    "updated": 2
+  },
+  "tables": {
+    "deprecated": 0,
+    "new": 1,
+    "ote": 0,
+    "total": 158,
+    "updated": 3
+  }
+}

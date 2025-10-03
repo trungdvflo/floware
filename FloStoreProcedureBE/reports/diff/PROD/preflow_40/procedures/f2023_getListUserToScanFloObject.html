@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.0">
+<meta name="plugin-version" content="vim9.0_v1">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=fallback">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>db/STAGE/preflow_40/procedures/f2023_getListUserToScanFloObject.sql</th>
+<th>db/PROD/preflow_40/procedures/f2023_getListUserToScanFloObject.sql</th>
+</tr><tr>
+<td><div>
+<pre>
+CREATE PROCEDURE `f2023_getListUserToScanFloObject`(pnInterval    INT
+                                                                      ,pnOffset      INT
+                                                                      ,pnLimit       INT)
+f2023_getListUserToScanFloObject:BEGIN
+  --
+<span class="DiffChange">  DECLARE vDomain           VARCHAR(45) DEFAULT '@flo</span><span class="DiffText">stage.com</span><span class="DiffChange">';                </span>
+  DECLARE nConsidering      INT(11) DEFAULT 0;
+  --
+<span class="DiffChange">  -- count considering: must be less than 10</span><span class="DiffText"> user</span><span class="DiffChange"> IN queue                      </span>
+  SELECT count(*)
+    INTO nConsidering
+    FROM user_process_invalid_link upil
+    WHERE upil.object_scanning = 1;
+  --
+<span class="DiffChange">  IF nConsidering &gt;= </span><span class="DiffText">pnLimit</span><span class="DiffChange"> THEN                                               </span>
+    --
+    LEAVE f2023_getListUserToScanFloObject;
+    --
+  END IF;
+  --
+   SELECT u.id user_id, u.username, upil.object_scanned_date
+     FROM `user` u
+     JOIN user_process_invalid_link upil ON (u.id = upil.user_id)
+    WHERE (upil.id IS NULL
+       OR upil.object_scanned_date IS NULL
+       OR upil.object_scanned_date &lt; (UNIX_TIMESTAMP(NOW(3) - INTERVAL pnInterval hour)))
+      AND ifnull(upil.object_scanning, 0) = 0
+      AND u.disabled           = 0
+<span class="DiffAdd">      /*AND u.username IN (</span><span class="DiffAdd">                                                     </span>
+<span class="DiffAdd">                concat('floauto.api_test_22', vDomain),</span><span class="DiffAdd">                         </span>
+<span class="DiffAdd">                concat('floauto.api_test_22_share1', vDomain),</span><span class="DiffAdd">                  </span>
+<span class="DiffAdd">                concat('floauto.api_debug_01', vDomain),</span><span class="DiffAdd">                        </span>
+<span class="DiffAdd">                concat('floauto.api_debug_01_share1', vDomain)</span><span class="DiffAdd">                  </span>
+<span class="DiffAdd">               /* concat('anph.owner', vDomain),</span><span class="DiffAdd">                                </span>
+<span class="DiffAdd">                concat('ipad_apns_share1', vDomain),</span><span class="DiffAdd">                            </span>
+<span class="DiffAdd">                concat('floauto.api_debug_01', vDomain),</span><span class="DiffAdd">                        </span>
+<span class="DiffAdd">                concat('floauto.api_test_22', vDomain),</span><span class="DiffAdd">                         </span>
+<span class="DiffAdd">                concat('floauto.api_test_22_share1', vDomain),</span><span class="DiffAdd">                  </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_1', vDomain),</span><span class="DiffAdd">                     </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_1_share1', vDomain),</span><span class="DiffAdd">              </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_2', vDomain),</span><span class="DiffAdd">                     </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_2_share1', vDomain),</span><span class="DiffAdd">              </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_3', vDomain),</span><span class="DiffAdd">                     </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_3_share1', vDomain),</span><span class="DiffAdd">              </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_4', vDomain),</span><span class="DiffAdd">                     </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_4_share1', vDomain),</span><span class="DiffAdd">              </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_5', vDomain),</span><span class="DiffAdd">                     </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_5_share1', vDomain),</span><span class="DiffAdd">              </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_6', vDomain),</span><span class="DiffAdd">                     </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_6_share1', vDomain),</span><span class="DiffAdd">              </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_7', vDomain),</span><span class="DiffAdd">                     </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_7_share1', vDomain),</span><span class="DiffAdd">              </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_8', vDomain),</span><span class="DiffAdd">                     </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_8_share1', vDomain),</span><span class="DiffAdd">              </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_9', vDomain),</span><span class="DiffAdd">                     </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_9_share1', vDomain),</span><span class="DiffAdd">              </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_10', vDomain),</span><span class="DiffAdd">                    </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_10_share1', vDomain),</span><span class="DiffAdd">             </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_11', vDomain),</span><span class="DiffAdd">                    </span>
+<span class="DiffAdd">                concat('floauto.api_nl_211122_11_share1', vDomain)</span><span class="DiffAdd">              </span>
+<span class="DiffAdd">            )*/</span><span class="DiffAdd">                                                                 </span>
+    ORDER BY u.created_date, u.updated_date DESC
+    LIMIT pnLimit
+   offset pnOffset;
+  --
+END
+</pre>
+</div></td>
+<td><div>
+<pre>
+CREATE PROCEDURE `f2023_getListUserToScanFloObject`(pnInterval    INT
+                                                                      ,pnOffset      INT
+                                                                      ,pnLimit       INT)
+f2023_getListUserToScanFloObject:BEGIN
+  --
+<span class="DiffChange">  DECLARE vDomain           VARCHAR(45) DEFAULT '@flo</span><span class="DiffText">mail.net</span><span class="DiffChange">';                 </span>
+  DECLARE nConsidering      INT(11) DEFAULT 0;
+  --
+<span class="DiffChange">  -- count considering: must be less than 10</span><span class="DiffText">00 email</span><span class="DiffChange"> IN queue                   </span>
+  SELECT count(*)
+    INTO nConsidering
+    FROM user_process_invalid_link upil
+    WHERE upil.object_scanning = 1;
+  --
+<span class="DiffChange">  IF nConsidering &gt;= </span><span class="DiffText">1e3</span><span class="DiffChange"> THEN                                                   </span>
+    --
+    LEAVE f2023_getListUserToScanFloObject;
+    --
+  END IF;
+  --
+   SELECT u.id user_id, u.username, upil.object_scanned_date
+     FROM `user` u
+     JOIN user_process_invalid_link upil ON (u.id = upil.user_id)
+    WHERE (upil.id IS NULL
+       OR upil.object_scanned_date IS NULL
+       OR upil.object_scanned_date &lt; (UNIX_TIMESTAMP(NOW(3) - INTERVAL pnInterval hour)))
+      AND ifnull(upil.object_scanning, 0) = 0
+      AND u.disabled           = 0
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+    ORDER BY u.created_date, u.updated_date DESC
+    LIMIT pnLimit
+   offset pnOffset;
+  --
+END
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+

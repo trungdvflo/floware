@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.0">
+<meta name="plugin-version" content="vim9.0_v1">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=fallback">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.Folded { color: #0000c0; background-color: #a8a8a8; padding-bottom: 1px; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>db/STAGE/preflow_40/procedures/d2023_listOfDeviceToken.sql</th>
+<th>db/PROD/preflow_40/procedures/d2023_listOfDeviceToken.sql</th>
+</tr><tr>
+<td><div>
+<pre>
+<span class="Folded">+-- 36 lines: CREATE PROCEDURE `d2023_listOfDeviceToken`(pvEmailList      TEXT--</span>
+     WHERE pbWeb
+       AND find_in_set(act.user_id, vListId)
+       AND act.app_id = 'e70f1b125cbad944424393cf309efaf0' -- WEB only
+       AND ifnull(act.is_revoked, 0) = 0
+       AND act.expires_in &gt; FLOOR(UNIX_TIMESTAMP(NOW(3) - INTERVAL 1 hour) * 1000) -- time IN seconds, living &amp; buffer 1h
+     UNION ALL
+<span class="DiffChange">    </span><span class="DiffText">(</span><span class="DiffChange">SELECT dt.device_type, NULL device_uid, dt.device_token, dt.user_id uid, dt.cert_env, dt.env_silent</span>
+      FROM device_token dt
+     WHERE find_in_set(dt.user_id, vListId)
+       AND find_in_set(dt.device_type, ifnull(pvDeviceType, '0,1,2,3,4'))
+       AND CASE
+             WHEN ifnull(voip, 0) = 1
+             THEN dt.cert_env IN (2, 3)
+             ELSE dt.cert_env IN (1, 0)
+            END
+       -- AND dt.env_silent = 1
+<span class="DiffAdd">       )</span><span class="DiffAdd">                                                                        </span>
+   ) dtt
+   JOIN user u ON (u.id = dtt.uid)
+  WHERE ifnull(u.disabled, 0) = 0
+    AND find_in_set(u.id, vListId);
+  --
+  SET SESSION group_concat_max_len = 1024;
+<span class="Folded">+--  2 lines: ------------------------------------------------------------------</span>
+</pre>
+</div></td>
+<td><div>
+<pre>
+<span class="Folded">+-- 36 lines: CREATE PROCEDURE `d2023_listOfDeviceToken`(pvEmailList      TEXT--</span>
+     WHERE pbWeb
+       AND find_in_set(act.user_id, vListId)
+       AND act.app_id = 'e70f1b125cbad944424393cf309efaf0' -- WEB only
+       AND ifnull(act.is_revoked, 0) = 0
+       AND act.expires_in &gt; FLOOR(UNIX_TIMESTAMP(NOW(3) - INTERVAL 1 hour) * 1000) -- time IN seconds, living &amp; buffer 1h
+     UNION ALL
+<span class="DiffChange">    SELECT dt.device_type, NULL device_uid, dt.device_token, dt.user_id uid, dt.cert_env, dt.env_silent</span>
+      FROM device_token dt
+     WHERE find_in_set(dt.user_id, vListId)
+       AND find_in_set(dt.device_type, ifnull(pvDeviceType, '0,1,2,3,4'))
+       AND CASE
+             WHEN ifnull(voip, 0) = 1
+             THEN dt.cert_env IN (2, 3)
+             ELSE dt.cert_env IN (1, 0)
+            END
+       -- AND dt.env_silent = 1
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+   ) dtt
+   JOIN user u ON (u.id = dtt.uid)
+  WHERE ifnull(u.disabled, 0) = 0
+    AND find_in_set(u.id, vListId);
+  --
+  SET SESSION group_concat_max_len = 1024;
+<span class="Folded">+--  2 lines: ------------------------------------------------------------------</span>
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+

@@ -1,0 +1,8 @@
+{
+  "tslint.configFile": "./tslint.json",
+  "[typescript]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  }
+}

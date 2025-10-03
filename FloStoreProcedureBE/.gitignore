@@ -1,0 +1,7 @@
+
+.env
+.history
+node_modules
+.DS_Store
+db/LOCAL
+map-migrate/LOCAL-to-DEV

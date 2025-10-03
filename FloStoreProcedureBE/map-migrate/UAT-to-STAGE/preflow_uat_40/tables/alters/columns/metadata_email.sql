@@ -1,0 +1,1 @@
+In case the token expires, if clients are connecting to the socket, the socket will not auto disconnect from the server.

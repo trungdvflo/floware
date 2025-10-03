@@ -1,0 +1,22 @@
+CREATE TABLE `device_token` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `device_token` varchar(255) NOT NULL DEFAULT '',
+  `device_type` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `device_uuid` varchar(255) DEFAULT '',
+  `time_sent_silent` double(13,3) NOT NULL DEFAULT '0.000',
+  `time_received_silent` double(13,3) NOT NULL DEFAULT '0.000',
+  `status_app_run` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `env_silent` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `device_env` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `cert_env` tinyint(1) unsigned DEFAULT '0',
+  `created_date` double(13,3) NOT NULL,
+  `updated_date` double(13,3) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uniq_device_token` (`device_token`) USING BTREE,
+  KEY `idx_user_id` (`user_id`) USING BTREE,
+  KEY `idx_device_token_filter_1` (`time_sent_silent`,`time_received_silent`),
+  KEY `idx_time_send` (`time_sent_silent`),
+  KEY `idx_time_received` (`time_received_silent`),
+  KEY `idx_cert_env` (`cert_env`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='latin1_swedish_ci'

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.0">
+<meta name="plugin-version" content="vim9.0_v1">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=fallback">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.Folded { color: #0000c0; background-color: #a8a8a8; padding-bottom: 1px; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>db/STAGE/preflow_40/procedures/f2023_collectInvalidLinks4User.sql</th>
+<th>db/PROD/preflow_40/procedures/f2023_collectInvalidLinks4User.sql</th>
+</tr><tr>
+<td><div>
+<pre>
+<span class="Folded">+-- 19 lines: CREATE PROCEDURE `f2023_collectInvalidLinks4User`(psSetResult   JSON  </span>
+  DECLARE nID        BIGINT(20);
+  DECLARE vEmail     VARCHAR(255) DEFAULT ifnull(pvEmail, 'NA');
+  DECLARE nCount     INT DEFAULT 0;
+  DECLARE nFIL       INT DEFAULT 0;
+  DECLARE nCSM       INT DEFAULT 0;
+  --
+<span class="DiffChange">  </span><span class="DiffText">-- </span><span class="DiffChange">START TRANSACTION;                                                         </span>
+  --
+  /* DECLARE
+     EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+      DECLARE vMessage TEXT DEFAULT 'An error has occurred, operation rollbacked AND the STORED PROCEDURE was TERMINATED';
+          GET DIAGNOSTICS CONDITION 1 vMessage = MESSAGE_TEXT;
+<span class="Folded">+-- 29 lines: ROLLBACK;---------------------------------------------------------</span>
+  END IF;
+  --
+  -- 1. recent object
+  IF nRO &lt;&gt; 0 THEN
+    --
+    SET nRO = 0;
+<span class="DiffChange">    SET nRO = nRO + f2023_collectRecentObjectCalDAV                     ('RO', pvObjectUid, </span><span class="DiffText">'VTODO'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nRO = nRO + f2023_collectRecentObjectCa</span><span class="DiffText">lDAV                     ('RO', pvObjectUid, 'VEVENT'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffAdd">    SET nRO = nRO + f2023_collectRecentObjectCalDAV                     ('RO', pvObjectUid, 'VJOURNAL', nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffAdd">    SET nRO = nRO + f2023_collectRecentObjectCardDAV                    ('RO', pvObjectUid, 'VCARD', nUserID, vEmail, nMaxTurn);</span>
+    --
+  END IF;
+  --
+  IF nCH &lt;&gt; 0 THEN
+    SET nCH = 0;
+    -- 2. contact history destination
+<span class="DiffChange">    SET nCH = nCH + f2023_collectContactHistoryDestCalDAV               ('CH', pvObjectUid, </span><span class="DiffText">'VTODO'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nCH = nCH + f2023_collectContactHistoryDestCa</span><span class="DiffText">lDAV               ('CH', pvObjectUid, 'VEVENT'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffAdd">    SET nCH = nCH + f2023_collectContactHistoryDestCalDAV               ('CH', pvObjectUid, 'VJOURNAL', nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffAdd">    SET nCH = nCH + f2023_collectContactHistoryDestCardDAV              ('CH', pvObjectUid, 'VCARD', nUserID, vEmail, nMaxTurn);</span>
+    -- 3. contact history source
+<span class="DiffChange">    SET nCH = nCH + f2023_collectContactHistorySourceCalDAV             ('CH', pvObjectUid, </span><span class="DiffText">'VTODO'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nCH = nCH + f2023_collectContactHistorySourceCa</span><span class="DiffText">lDAV             ('CH', pvObjectUid, 'VEVENT'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffAdd">    SET nCH = nCH + f2023_collectContactHistorySourceCalDAV             ('CH', pvObjectUid, 'VJOURNAL', nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffAdd">    SET nCH = nCH + f2023_collectContactHistorySourceCardDAV            ('CH', pvObjectUid, 'VCARD', nUserID, vEmail, nMaxTurn);</span>
+    --
+  END IF;
+  --
+  IF nKC &lt;&gt; 0 THEN
+    -- 4. kanban card
+    SET nKC = 0;
+<span class="DiffChange">    SET nKC = nKC + f2023_collectKanbanCardCalDAV                       ('KC', pvObjectUid, </span><span class="DiffText">'VTODO'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nKC = nKC + f2023_collectKanbanCardCa</span><span class="DiffText">lDAV                       ('KC', pvObjectUid, 'VEVENT'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nKC = nKC + f2023_collectKanbanCardC</span><span class="DiffText">alDAV                       ('KC', pvObjectUid, 'VJOURNAL'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nKC = nKC + f2023_collectKanbanCard</span><span class="DiffText">CardDAV                      ('KC', pvObjectUid, 'VCARD'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nKC = nKC + f2023_collectKanbanCard</span><span class="DiffText">Cloud                        ('KC', pvObjectUid, 'CSFILE'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffAdd">    SET nKC = nKC + f2023_collectKanbanCardURL                          ('KC', pvObjectUid, 'URL', nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffAdd">    -- SET nKC = nKC + f2023_collectKanbanCardShared                       ('KC', pvObjectUid, pvObjectType, nUserID, vEmail, nMaxTurn);</span>
+    --
+  END IF;
+  --
+  IF nLCO &lt;&gt; 0 THEN
+    -- 5. linked collection object
+    SET nLCO = 0;
+<span class="DiffChange">    SET nLCO = nLCO + f2023_collectLinkedCollectionObjectCalDAV         ('LCO', pvObjectUid, </span><span class="DiffText">'VTODO'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLCO = nLCO + f2023_collectLinkedCollectionObjectCa</span><span class="DiffText">lDAV         ('LCO', pvObjectUid, 'VEVENT'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLCO = nLCO + f2023_collectLinkedCollectionObjectC</span><span class="DiffText">alDAV         ('LCO', pvObjectUid, 'VJOURNAL'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLCO = nLCO + f2023_collectLinkedCollectionObject</span><span class="DiffText">CardDAV        ('LCO', pvObjectUid, 'VCARD'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLCO = nLCO + f2023_collectLinkedCollectionObject</span><span class="DiffText">Cloud          ('LCO', pvObjectUid, 'CSFILE'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffAdd">    SET nLCO = nLCO + f2023_collectLinkedCollectionObjectURL            ('LCO', pvObjectUid, 'URL', nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffAdd">    -- SET nLCO = nLCO + f2023_collectLinkedCollectionObjectShared         ('LCO', pvObjectUid, pvObjectType, nUserID, vEmail, nMaxTurn);</span>
+    --
+  END IF;
+  --
+  IF nLO &lt;&gt; 0 THEN
+    -- 6. linked object source
+    SET nLO = 0;
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObjectSourceCa</span><span class="DiffText">lDAV               ('LO', pvObjectUid, 'VTODO'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObjectSourceCalDAV               ('LO', pvObjectUid, </span><span class="DiffText">'VEVENT'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObjectSourceC</span><span class="DiffText">alDAV               ('LO', pvObjectUid, 'VJOURNAL'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObjectSource</span><span class="DiffText">CardDAV              ('LO', pvObjectUid, 'VCARD'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObjectSource</span><span class="DiffText">Cloud                ('LO', pvObjectUid, 'CSFILE'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObject</span><span class="DiffText">SourceURL                  ('LO', pvObjectUid, 'URL'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffAdd">    -- SET nLO = nLO + f2023_collectLinkedObjectSourceShared               ('LO', pvObjectUid, pvObjectType, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffAdd">    -- SET nLO = nLO + f2023_collectLinkedObjectDestShared                 ('LO', pvObjectUid, pvObjectType, nUserID, vEmail, nMaxTurn);</span>
+    -- 7. linked object destination
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObjectDestCalDAV                 ('LO', pvObjectUid, </span><span class="DiffText">'VTODO'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObjectDestCa</span><span class="DiffText">lDAV                 ('LO', pvObjectUid, 'VEVENT'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObjectDestC</span><span class="DiffText">alDAV                 ('LO', pvObjectUid, 'VJOURNAL'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObjectDest</span><span class="DiffText">CardDAV                ('LO', pvObjectUid, 'VCARD'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffAdd">    SET nLO = nLO + f2023_collectLinkedObjectDestCloud                  ('LO', pvObjectUid, 'CSFILE', nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffAdd">    SET nLO = nLO + f2023_collectLinkedObjectDestURL                    ('LO', pvObjectUid, 'URL', nUserID, vEmail, nMaxTurn);</span>
+    --
+  END IF;
+  --
+  IF nTC &lt;&gt; 0 THEN
+  -- 8. trash collection
+    SET nTC = 0;
+<span class="DiffChange">    SET nTC = nTC + f2023_collectTrashCollectionCalDAV                  ('TC', pvObjectUid, </span><span class="DiffText">'VTODO'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nTC = nTC + f2023_collectTrashCollectionCa</span><span class="DiffText">lDAV                  ('TC', pvObjectUid, 'VEVENT'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nTC = nTC + f2023_collectTrashCollectionC</span><span class="DiffText">alDAV                  ('TC', pvObjectUid, 'VJOURNAL'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nTC = nTC + f2023_collectTrashCollection</span><span class="DiffText">CardDAV                 ('TC', pvObjectUid, 'VCARD'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffAdd">    SET nTC = nTC + f2023_collectTrashCollectionCloud                   ('TC', pvObjectUid, 'CSFILE', nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffAdd">    SET nTC = nTC + f2023_collectTrashCollectionURL                     ('TC', pvObjectUid, 'URL', nUserID, vEmail, nMaxTurn);</span>
+    --
+  END IF;
+  --
+  IF nSO &lt;&gt; 0 THEN
+  -- 9. sort todo
+    SET nSO = 0;
+<span class="DiffChange">    SET nSO = nSO + f2023_collectSortObjectTodo                         ('SO', pvObjectUid, </span><span class="DiffText">'VTODO'</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+    --
+  END IF;
+  --
+  IF nKB &lt;&gt; 0 THEN
+    -- 10. kanban
+    SET nKB = 0;
+<span class="Folded">+-- 14 lines: SET nKB = nKB + f2023_collectKanbanShared                            ('KB', pvObjectUid, pvObjectType, nUserID, vEmail, nMaxTurn);</span>
+  SET nCSM = f2023_removeShareMemberOutdated (nUserID);
+  --
+  SET nCount = nRO + nCH + nKC + nLCO + nLO + nTC + nSO + nKB + nCIM;
+  --
+  SELECT nCount, nRO, nCH, nKC, nLCO, nLO, nTC, nSO, nKB, nCIM, nFIL, nCSM, nMaxTurn;
+  --
+<span class="DiffChange">  </span><span class="DiffText">-- </span><span class="DiffChange">COMMIT;                                                                    </span>
+  --
+END
+</pre>
+</div></td>
+<td><div>
+<pre>
+<span class="Folded">+-- 19 lines: CREATE PROCEDURE `f2023_collectInvalidLinks4User`(psSetResult   JSON  </span>
+  DECLARE nID        BIGINT(20);
+  DECLARE vEmail     VARCHAR(255) DEFAULT ifnull(pvEmail, 'NA');
+  DECLARE nCount     INT DEFAULT 0;
+  DECLARE nFIL       INT DEFAULT 0;
+  DECLARE nCSM       INT DEFAULT 0;
+  --
+<span class="DiffChange">  START TRANSACTION;</span><span class="DiffChange">                                                            </span>
+  --
+  /* DECLARE
+     EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+      DECLARE vMessage TEXT DEFAULT 'An error has occurred, operation rollbacked AND the STORED PROCEDURE was TERMINATED';
+          GET DIAGNOSTICS CONDITION 1 vMessage = MESSAGE_TEXT;
+<span class="Folded">+-- 29 lines: ROLLBACK;---------------------------------------------------------</span>
+  END IF;
+  --
+  -- 1. recent object
+  IF nRO &lt;&gt; 0 THEN
+    --
+    SET nRO = 0;
+<span class="DiffChange">    SET nRO = nRO + f2023_collectRecentObjectCalDAV                     ('RO', pvObjectUid, </span><span class="DiffText">pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nRO = nRO + f2023_collectRecentObjectCa</span><span class="DiffText">rdDAV                    ('RO', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+    --
+  END IF;
+  --
+  IF nCH &lt;&gt; 0 THEN
+    SET nCH = 0;
+    -- 2. contact history destination
+<span class="DiffChange">    SET nCH = nCH + f2023_collectContactHistoryDestCalDAV               ('CH', pvObjectUid, </span><span class="DiffText">pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nCH = nCH + f2023_collectContactHistoryDestCa</span><span class="DiffText">rdDAV              ('CH', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+    -- 3. contact history source
+<span class="DiffChange">    SET nCH = nCH + f2023_collectContactHistorySourceCalDAV             ('CH', pvObjectUid, </span><span class="DiffText">pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nCH = nCH + f2023_collectContactHistorySourceCa</span><span class="DiffText">rdDAV            ('CH', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+    --
+  END IF;
+  --
+  IF nKC &lt;&gt; 0 THEN
+    -- 4. kanban card
+    SET nKC = 0;
+<span class="DiffChange">    SET nKC = nKC + f2023_collectKanbanCardCalDAV                       ('KC', pvObjectUid, </span><span class="DiffText">pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nKC = nKC + f2023_collectKanbanCardCa</span><span class="DiffText">rdDAV                      ('KC', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nKC = nKC + f2023_collectKanbanCardC</span><span class="DiffText">loud                        ('KC', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nKC = nKC + f2023_collectKanbanCard</span><span class="DiffText">URL                          ('KC', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nKC = nKC + f2023_collectKanbanCard</span><span class="DiffText">Shared                       ('KC', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+    --
+  END IF;
+  --
+  IF nLCO &lt;&gt; 0 THEN
+    -- 5. linked collection object
+    SET nLCO = 0;
+<span class="DiffChange">    SET nLCO = nLCO + f2023_collectLinkedCollectionObjectCalDAV         ('LCO', pvObjectUid, </span><span class="DiffText">pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLCO = nLCO + f2023_collectLinkedCollectionObjectCa</span><span class="DiffText">rdDAV        ('LCO', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLCO = nLCO + f2023_collectLinkedCollectionObjectC</span><span class="DiffText">loud          ('LCO', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLCO = nLCO + f2023_collectLinkedCollectionObject</span><span class="DiffText">URL            ('LCO', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLCO = nLCO + f2023_collectLinkedCollectionObject</span><span class="DiffText">Shared         ('LCO', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+    --
+  END IF;
+  --
+  IF nLO &lt;&gt; 0 THEN
+    -- 6. linked object source
+    SET nLO = 0;
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObjectSourceCa</span><span class="DiffText">rdDAV              ('LO', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObjectSourceCalDAV               ('LO', pvObjectUid, </span><span class="DiffText">pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObjectSourceC</span><span class="DiffText">loud                ('LO', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObjectSource</span><span class="DiffText">URL                  ('LO', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObjectSource</span><span class="DiffText">Shared               ('LO', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObject</span><span class="DiffText">DestShared                 ('LO', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+    -- 7. linked object destination
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObjectDestCalDAV                 ('LO', pvObjectUid, </span><span class="DiffText">pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObjectDestCa</span><span class="DiffText">rdDAV                ('LO', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObjectDestC</span><span class="DiffText">loud                  ('LO', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nLO = nLO + f2023_collectLinkedObjectDest</span><span class="DiffText">URL                    ('LO', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+    --
+  END IF;
+  --
+  IF nTC &lt;&gt; 0 THEN
+  -- 8. trash collection
+    SET nTC = 0;
+<span class="DiffChange">    SET nTC = nTC + f2023_collectTrashCollectionCalDAV                  ('TC', pvObjectUid, </span><span class="DiffText">pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nTC = nTC + f2023_collectTrashCollectionCa</span><span class="DiffText">rdDAV                 ('TC', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nTC = nTC + f2023_collectTrashCollectionC</span><span class="DiffText">loud                   ('TC', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffChange">    SET nTC = nTC + f2023_collectTrashCollection</span><span class="DiffText">URL                     ('TC', pvObjectUid, pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+    --
+  END IF;
+  --
+  IF nSO &lt;&gt; 0 THEN
+  -- 9. sort todo
+    SET nSO = 0;
+<span class="DiffChange">    SET nSO = nSO + f2023_collectSortObjectTodo                         ('SO', pvObjectUid, </span><span class="DiffText">pvObjectType</span><span class="DiffChange">, nUserID, vEmail, nMaxTurn);</span>
+    --
+  END IF;
+  --
+  IF nKB &lt;&gt; 0 THEN
+    -- 10. kanban
+    SET nKB = 0;
+<span class="Folded">+-- 14 lines: SET nKB = nKB + f2023_collectKanbanShared                            ('KB', pvObjectUid, pvObjectType, nUserID, vEmail, nMaxTurn);</span>
+  SET nCSM = f2023_removeShareMemberOutdated (nUserID);
+  --
+  SET nCount = nRO + nCH + nKC + nLCO + nLO + nTC + nSO + nKB + nCIM;
+  --
+  SELECT nCount, nRO, nCH, nKC, nLCO, nLO, nTC, nSO, nKB, nCIM, nFIL, nCSM, nMaxTurn;
+  --
+<span class="DiffChange">  COMMIT;</span><span class="DiffChange">                                                                       </span>
+  --
+END
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+

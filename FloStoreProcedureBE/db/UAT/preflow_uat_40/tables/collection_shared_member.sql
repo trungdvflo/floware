@@ -1,0 +1,22 @@
+CREATE TABLE `collection_shared_member` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `collection_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'ID record of the collection table',
+  `calendar_uri` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'This is shared calendar for member, each member will be shared one calendar, it will contain calendar uri of table [calendarinstance] of sabreDAV',
+  `access` tinyint(2) NOT NULL COMMENT 'This is permission shared collection. value = -1 >> sharing public collection - read only, value = 1 >> owner, value = 2 >> read, value = 3 >> read-write',
+  `shared_status` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'The status of the shared collection, value = 0 >> waiting, value = 1 >> joined, value = 2 >> declined, value = 3 >> removed by owner, value = 4 >> leave shared collection',
+  `shared_email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'This contains the Flo email address who shared collection by owner',
+  `member_user_id` bigint(20) unsigned NOT NULL,
+  `contact_uid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'It will contain the contact uid. Purpose >> the client app can load quickly the contact to show on the UI',
+  `contact_href` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'It is href of the contact, address book',
+  `account_id` bigint(20) unsigned DEFAULT '0' COMMENT 'This is third party account setting ID, it support for the contact of third party account. Default value = 0 (Flo account)',
+  `created_date` double(13,3) NOT NULL DEFAULT '0.000',
+  `updated_date` double(13,3) NOT NULL DEFAULT '0.000',
+  PRIMARY KEY (`id`),
+  KEY `idx_member_user_id` (`member_user_id`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_collection_id` (`collection_id`),
+  KEY `idx_shared_status` (`shared_status`) USING BTREE,
+  KEY `idx_updated_date` (`updated_date`) USING BTREE,
+  KEY `idx_member_user_status_access_id` (`member_user_id`,`shared_status`,`access`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.0">
+<meta name="plugin-version" content="vim9.0_v2">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=none">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.Folded { color: #0000c0; background-color: #a8a8a8; padding-bottom: 1px; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>db/DEV/preflow_40/procedures/m2023_insertAPILastModify.sql</th>
+<th>db/UAT/preflow_uat_40/procedures/m2023_insertAPILastModify.sql</th>
+</tr><tr>
+<td><div>
+<pre>
+<span class="Folded">+-- 15 lines: CREATE PROCEDURE `m2023_insertAPILastModify`(pvAPIName      VARCHAR(255)</span>
+    --
+    SELECT pvAPIName api_name, nModifiedDate updated_date;
+    LEAVE alm;
+    --
+  END IF;
+  -- INSERT last modify
+<span class="DiffChange">  </span><span class="DiffText">SET nId = m2023_insertAPILastModify(pvAPIName, pnUserId, pdModifyDate);</span><span class="DiffChange">       </span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+  --
+  SELECT pvAPIName api_name, pdModifyDate updated_date;
+  --
+END
+</pre>
+</div></td>
+<td><div>
+<pre>
+<span class="Folded">+-- 15 lines: CREATE PROCEDURE `m2023_insertAPILastModify`(pvAPIName      VARCHAR(255)</span>
+    --
+    SELECT pvAPIName api_name, nModifiedDate updated_date;
+    LEAVE alm;
+    --
+  END IF;
+  -- INSERT last modify
+<span class="DiffChange">  </span><span class="DiffText">INSERT INTO api_last_modified</span><span class="DiffChange">                                                 </span>
+<span class="DiffAdd">         (`user_id`, `api_name`, `api_modified_date`, `created_date`, `updated_date`)</span>
+<span class="DiffAdd">  VALUES(pnUserId, pvAPIName, pdModifyDate, pdModifyDate, pdModifyDate)</span><span class="DiffAdd">         </span>
+<span class="DiffAdd">  ON DUPLICATE KEY UPDATE api_modified_date=VALUES(api_modified_date), updated_date=VALUES(updated_date);</span>
+<span class="DiffAdd">  -- keep id TO RETURN</span><span class="DiffAdd">                                                          </span>
+<span class="DiffAdd">  SELECT last_insert_id() INTO nId;</span><span class="DiffAdd">                                             </span>
+<span class="DiffAdd">  -- INSERT IGNORE TO prevent DUPLICATE item</span><span class="DiffAdd">                                    </span>
+<span class="DiffAdd">  INSERT IGNORE INTO push_change </span><span class="DiffAdd">                                               </span>
+<span class="DiffAdd">      (user_id, created_date) </span><span class="DiffAdd">                                                  </span>
+<span class="DiffAdd">  VALUES (pnUserId, pdModifyDate);</span><span class="DiffAdd">                                              </span>
+  --
+  SELECT pvAPIName api_name, pdModifyDate updated_date;
+  --
+END
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+

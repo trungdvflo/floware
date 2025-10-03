@@ -1,0 +1,2 @@
+ALTER TABLE `group`
+CHANGE COLUMN internal_group internal_group enum('0','1','2','3','4','5','6') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0' COMMENT '1 - add to web test group\\\\n2 - add to mac test group\\\\n3 - add to iphone test group\\\\n4 - add to ipad test group\\\\n5 - add to qa test group\\\\n6 - add to auto test group';

@@ -1,0 +1,18 @@
+@startuml
+actor User
+
+participant "User" as U
+participant "c2024_listOfTabComment" as OldFunction
+participant "c2024_listOfTabCommentV2" as NewFunction
+
+U -> OldFunction: Call c2024_listOfTabComment(12 parameters)
+activate OldFunction
+OldFunction -> U: Return result
+
+User -> NewFunction: Call c2024_listOfTabCommentV2(14 parameters)
+activate NewFunction
+NewFunction -> User: Return result
+
+deactivate OldFunction
+
+@enduml

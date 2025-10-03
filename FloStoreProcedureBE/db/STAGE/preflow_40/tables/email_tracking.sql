@@ -1,0 +1,20 @@
+CREATE TABLE `email_tracking` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `account_id` bigint(20) unsigned DEFAULT '0',
+  `message_id` varchar(255) NOT NULL,
+  `object_uid` varbinary(1000) NOT NULL DEFAULT '',
+  `object_type` varbinary(50) NOT NULL,
+  `emails` json NOT NULL,
+  `subject` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `time_send` double(13,3) NOT NULL DEFAULT '0.000',
+  `time_tracking` double(13,3) DEFAULT '0.000',
+  `replied_time` double(13,3) DEFAULT '0.000',
+  `created_date` double(13,3) NOT NULL,
+  `updated_date` double(13,3) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uniq_on_user_id_and_account_id_and_object_uid_and_object_type` (`user_id`,`account_id`,`object_uid`,`object_type`) USING BTREE,
+  KEY `idx_user_id` (`user_id`) USING BTREE,
+  KEY `idx_email_tracking_updated_date` (`updated_date`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='utf8mb4_unicode_ci'

@@ -1,0 +1,23 @@
+CREATE TABLE `kanban_card` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `object_uid` varbinary(1000) NOT NULL,
+  `object_type` varbinary(50) NOT NULL,
+  `object_href` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `item_card_order` int(11) DEFAULT '0',
+  `kanban_id` bigint(20) NOT NULL DEFAULT '0',
+  `account_id` bigint(20) unsigned DEFAULT '0',
+  `order_number` decimal(20,10) DEFAULT '0.0000000000',
+  `order_update_time` double(13,3) NOT NULL DEFAULT '0.000',
+  `is_trashed` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `recent_date` double(13,3) NOT NULL DEFAULT '0.000',
+  `created_date` double(13,3) NOT NULL DEFAULT '0.000',
+  `updated_date` double(13,3) NOT NULL DEFAULT '0.000',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uniq_on_object_uid_and_object_type_and_kanban_id_and_account_id` (`object_uid`,`object_type`,`kanban_id`,`account_id`) USING BTREE,
+  UNIQUE KEY `uniq_on_user_id_and_kanban_id_and_order_number` (`user_id`,`kanban_id`,`order_number`),
+  KEY `idx_is_trashed` (`is_trashed`) USING BTREE,
+  KEY `idx_user_id` (`user_id`) USING BTREE,
+  KEY `idx_kanban_id` (`kanban_id`) USING BTREE,
+  KEY `idx_on_user_id_and_kanban_id` (`user_id`,`kanban_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='latin1_swedish_ci'

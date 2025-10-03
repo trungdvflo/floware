@@ -1,0 +1,18 @@
+@startuml
+
+actor User
+database DB as "Database"
+participant Middleware as "Middleware"
+participant Business as "Business Logic"
+
+User -> DB: Insert Feature
+DB --> Business: Feature Insertion
+Business --> Business: Manage Layers and Permissions
+Business --> DB: Update Permission Layer and Value
+User -> Middleware: Check Access Rights
+Middleware -> DB: Retrieve Permission Value
+DB --> Middleware: Permission Value
+Middleware --> Middleware: Check Permissions
+Middleware --> User: Access Decision
+
+@enduml

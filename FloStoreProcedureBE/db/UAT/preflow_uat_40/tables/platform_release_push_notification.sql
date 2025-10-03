@@ -1,0 +1,21 @@
+CREATE TABLE `platform_release_push_notification` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `app_id` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `base_release_id` bigint(20) unsigned NOT NULL,
+  `destination_release_id` bigint(20) unsigned NOT NULL,
+  `title` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `message` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url_download` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `force_update` tinyint(1) unsigned DEFAULT '0',
+  `status` tinyint(4) DEFAULT '1',
+  `created_date` double(13,3) NOT NULL DEFAULT '0.000',
+  `updated_date` double(13,3) NOT NULL DEFAULT '0.000',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uniq_base_release_id_and_destination_release_id` (`base_release_id`,`destination_release_id`) USING BTREE,
+  KEY `idx_status` (`status`) USING BTREE,
+  KEY `idx_destination_release_id` (`destination_release_id`) USING BTREE,
+  KEY `idx_base_release_id` (`base_release_id`) USING BTREE,
+  KEY `idx_app_id` (`app_id`) USING BTREE,
+  CONSTRAINT `cst_base_release_id` FOREIGN KEY (`base_release_id`) REFERENCES `release` (`id`),
+  CONSTRAINT `cst_destination_release_id` FOREIGN KEY (`destination_release_id`) REFERENCES `release` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.0">
+<meta name="plugin-version" content="vim9.0_v2">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=none">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.Folded { color: #0000c0; background-color: #a8a8a8; padding-bottom: 1px; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>db/UAT/preflow_uat_40/procedures/adm2023_listOfUser.sql</th>
+<th>db/STAGE/preflow_40/procedures/adm2023_listOfUser.sql</th>
+</tr><tr>
+<td><div>
+<pre>
+<span class="Folded">+--119 lines: CREATE PROCEDURE `adm2023_listOfUser`(pvIds                    TEXT</span>
+      AND ifnull(rcu.deleted, 0)             = 0 --
+      AND (rcu.join_date                    &gt;= ifnull(pdJoinDateStart, 0) AND rcu.join_date       &lt;= ifnull(pdJoinDateEnd, unix_timestamp()))
+      AND (rcu.last_used_date               &gt;= ifnull(pdLastUsedStart, 0) AND rcu.last_used_date  &lt;= ifnull(pdLastUsedEnd, unix_timestamp()))
+      AND IF(ifnull(pbSubscriptionTypes, '') = '', 1 , ifnull(find_in_set(rcu.subs_type, pbSubscriptionTypes), 0))
+      AND IF(ifnull(pvPlatformIds, '')       = '', 1 ,futil_findNeedleInHaystack(pvPlatformIds, rcu.platform, pvPlatformFilterType))
+    GROUP BY rcu.id, gu.user_id
+<span class="DiffChange">    ORDER BY</span><span class="DiffChange">                                                                    </span>
+<span class="DiffChange">    --</span><span class="DiffChange">                                                                          </span>
+<span class="DiffChange">      </span><span class="DiffText">CASE -- string columns</span><span class="DiffChange">                                                    </span>
+<span class="DiffChange">    </span><span class="DiffText">WHEN INSTR(vSort, '-') AND (vFieldSort='groups')</span><span class="DiffChange"> THEN gu.groups             </span>
+<span class="DiffChange">        </span><span class="DiffText">WHEN INSTR(vSort, '-') AND (vFieldSort='email') THEN rcu.email</span><span class="DiffChange">          </span>
+<span class="DiffChange">    </span><span class="DiffText">END DESC,</span><span class="DiffChange">                                                                   </span>
+<span class="DiffChange">      </span><span class="DiffText">CASE -- NUMERIC columns</span><span class="DiffChange">                                                   </span>
+<span class="DiffChange">    </span><span class="DiffText">WHEN INSTR(vSort, '-') AND (vFieldSort='id') THEN rcu.id</span><span class="DiffChange">                    </span>
+<span class="DiffChange">        </span><span class="DiffText">WHEN INSTR(vSort, '-') AND (vFieldSort='account_3rd') THEN rcu.account_3rd</span>
+<span class="DiffChange">    </span><span class="DiffText">WHEN INSTR(vSort, '-') AND (vFieldSort='storage') THEN rcu.storage_total</span><span class="DiffChange">    </span>
+<span class="DiffChange">    </span><span class="DiffText">WHEN INSTR(vSort, '-') AND (vFieldSort='subs_type') THEN rcu.subs_typ</span><span class="DiffChange">e      </span>
+<span class="DiffChange">    </span><span class="DiffText">WHEN INSTR(vSort, '-') AND (vFieldSort='last_used_date') THEN rcu.last_used_date</span>
+<span class="DiffChange">    </span><span class="DiffText">WHEN INSTR(vSort, '-') AND (vFieldSort='join_date') THEN rcu.join_date</span><span class="DiffChange">      </span>
+<span class="DiffChange">    </span><span class="DiffText">WHEN INSTR(vSort, '-') AND (vFieldSort='next_renewal') THEN rcu.next_renewal</span>
+<span class="DiffChange">    END DESC,</span><span class="DiffChange">                                                                   </span>
+<span class="DiffChange">    </span><span class="DiffText">--</span><span class="DiffChange">                                                                          </span>
+<span class="DiffChange">      </span><span class="DiffText">CASE -- string columns</span><span class="DiffChange">                                                    </span>
+<span class="DiffChange">    </span><span class="DiffText">WHEN INSTR(vSort, '+') AND (vFieldSort='groups') THEN gu.groups</span><span class="DiffChange">             </span>
+<span class="DiffChange">        </span><span class="DiffText">WHEN INSTR(vSort, '+') AND (vFieldSort='email') THEN rcu.email</span><span class="DiffChange">          </span>
+<span class="DiffChange">    </span><span class="DiffText">END ASC,</span><span class="DiffChange">                                                                    </span>
+<span class="DiffChange">      </span><span class="DiffText">CASE -- NUMERIC columns</span><span class="DiffChange">                                                   </span>
+<span class="DiffChange">    </span><span class="DiffText">WHEN INSTR(vSort, '+') AND (vFieldSort='id') THEN rcu.i</span><span class="DiffChange">d                    </span>
+<span class="DiffChange">        </span><span class="DiffText">WHEN INSTR(vSort, '+') AND (vFieldSort='account_3rd') THEN rcu.account_3rd</span>
+<span class="DiffChange">    </span><span class="DiffText">WHEN INSTR(vSort, '+') AND (vFieldSort='storage') THEN rcu.storage_total</span><span class="DiffChange">    </span>
+<span class="DiffChange">    </span><span class="DiffText">WHEN INSTR(vSort, '+') AND (vFieldSort='subs_type') THEN rcu.subs_typ</span><span class="DiffChange">e      </span>
+<span class="DiffChange">    </span><span class="DiffText">WHEN INSTR(vSort, '+') AND (vFieldSort='last_used_date') THEN rcu.last_used</span><span class="DiffChange">_date</span>
+<span class="DiffChange">    </span><span class="DiffText">WHEN INSTR(vSort, '+') AND (vFieldSort='join_date') THEN rcu.join_date</span><span class="DiffChange">      </span>
+<span class="DiffChange">    </span><span class="DiffText">WHEN INSTR(vSort, '+') AND (vFieldSort='next_renewal') THEN rcu.next_renewal</span>
+<span class="DiffChange">    </span><span class="DiffText">END ASC</span><span class="DiffChange">                                                                     </span>
+<span class="DiffChange">    </span><span class="DiffText">--      </span><span class="DiffChange">                                                                    </span>
+     LIMIT nOFFSET, nLIMIT;
+END
+</pre>
+</div></td>
+<td><div>
+<pre>
+<span class="Folded">+--119 lines: CREATE PROCEDURE `adm2023_listOfUser`(pvIds                    TEXT</span>
+      AND ifnull(rcu.deleted, 0)             = 0 --
+      AND (rcu.join_date                    &gt;= ifnull(pdJoinDateStart, 0) AND rcu.join_date       &lt;= ifnull(pdJoinDateEnd, unix_timestamp()))
+      AND (rcu.last_used_date               &gt;= ifnull(pdLastUsedStart, 0) AND rcu.last_used_date  &lt;= ifnull(pdLastUsedEnd, unix_timestamp()))
+      AND IF(ifnull(pbSubscriptionTypes, '') = '', 1 , ifnull(find_in_set(rcu.subs_type, pbSubscriptionTypes), 0))
+      AND IF(ifnull(pvPlatformIds, '')       = '', 1 ,futil_findNeedleInHaystack(pvPlatformIds, rcu.platform, pvPlatformFilterType))
+    GROUP BY rcu.id, gu.user_id
+<span class="DiffChange">    ORDER BY</span><span class="DiffText"> CASE WHEN INSTR(vSort, '-') THEN</span><span class="DiffChange">                                   </span>
+<span class="DiffChange">    </span><span class="DiffText">    </span><span class="DiffChange">--                                                                      </span>
+<span class="DiffChange">      </span><span class="DiffText">  CASE vFieldSort</span><span class="DiffChange">                                                         </span>
+<span class="DiffChange">    </span><span class="DiffText">      WHEN 'groups'        </span><span class="DiffChange"> THEN gu.groups                                  </span>
+<span class="DiffChange">        </span><span class="DiffText">  WHEN 'id'             THEN rcu.id</span><span class="DiffChange">                                     </span>
+<span class="DiffChange">    </span><span class="DiffText">      WHEN 'email'          THEN rcu.email</span><span class="DiffChange">                                  </span>
+<span class="DiffChange">      </span><span class="DiffText">    WHEN 'account_3rd'    THEN rcu.account_3rd</span><span class="DiffChange">                            </span>
+<span class="DiffChange">    </span><span class="DiffText">      WHEN 'storage'        THEN rcu.storage_total</span><span class="DiffChange">                          </span>
+<span class="DiffChange">        </span><span class="DiffText">  WHEN 'subs_type'      THEN rcu.subs_type</span><span class="DiffChange">                              </span>
+<span class="DiffChange">    </span><span class="DiffText">      WHEN 'last_used_date' THEN rcu.last_used_date</span><span class="DiffChange">                         </span>
+<span class="DiffChange">    </span><span class="DiffText">      WHEN 'join_date'      THEN rcu.join_dat</span><span class="DiffChange">e                              </span>
+<span class="DiffChange">    </span><span class="DiffText">      WHEN 'next_renewal'   THEN rcu.next_renewal</span><span class="DiffChange">                           </span>
+<span class="DiffChange">    </span><span class="DiffText">    END</span><span class="DiffChange">                                                                     </span>
+<span class="DiffChange">    </span><span class="DiffText">    --</span><span class="DiffChange">                                                                      </span>
+<span class="DiffChange">    </span><span class="DiffText">  </span><span class="DiffChange">END DESC,                                                                 </span>
+<span class="DiffChange">    </span><span class="DiffText"> CASE WHEN INSTR(vSort, '+') THEN</span><span class="DiffChange">                                           </span>
+<span class="DiffChange">      </span><span class="DiffText">  --</span><span class="DiffChange">                                                                      </span>
+<span class="DiffChange">    </span><span class="DiffText">    CASE vFieldSort</span><span class="DiffChange">                                                         </span>
+<span class="DiffChange">        </span><span class="DiffText">  WHEN 'groups'         THEN gu.groups</span><span class="DiffChange">                                  </span>
+<span class="DiffChange">    </span><span class="DiffText">      WHEN 'id'             THEN rcu.id</span><span class="DiffChange">                                     </span>
+<span class="DiffChange">      </span><span class="DiffText">    WHEN 'email'          THEN rcu.email</span><span class="DiffChange">                                  </span>
+<span class="DiffChange">    </span><span class="DiffText">      WHEN 'account_3rd'    THEN rcu.account_3r</span><span class="DiffChange">d                            </span>
+<span class="DiffChange">        </span><span class="DiffText">  WHEN 'storage'        THEN rcu.storage_total</span><span class="DiffChange">                          </span>
+<span class="DiffChange">    </span><span class="DiffText">      WHEN 'subs_type'      THEN rcu.subs_type</span><span class="DiffChange">                              </span>
+<span class="DiffChange">    </span><span class="DiffText">      WHEN 'last_used_date' THEN rcu.last_used_dat</span><span class="DiffChange">e                         </span>
+<span class="DiffChange">    </span><span class="DiffText">      WHEN 'join_date'      THEN rcu.join</span><span class="DiffChange">_date                              </span>
+<span class="DiffChange">    </span><span class="DiffText">      WHEN 'next_renewal'   THEN rcu.next_renewal</span><span class="DiffChange">                           </span>
+<span class="DiffChange">    </span><span class="DiffText">    END</span><span class="DiffChange">                                                                     </span>
+<span class="DiffChange">    </span><span class="DiffText">   --</span><span class="DiffChange">                                                                       </span>
+<span class="DiffChange">    </span><span class="DiffText">  END ASC</span><span class="DiffChange">                                                                   </span>
+     LIMIT nOFFSET, nLIMIT;
+END
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+

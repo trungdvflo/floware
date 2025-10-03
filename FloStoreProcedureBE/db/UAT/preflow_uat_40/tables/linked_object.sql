@@ -1,0 +1,23 @@
+CREATE TABLE `linked_object` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `source_object_uid` varbinary(1000) NOT NULL,
+  `source_object_type` varbinary(50) NOT NULL,
+  `source_account_id` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `source_object_href` text COLLATE utf8_unicode_ci,
+  `destination_object_uid` varbinary(1000) NOT NULL,
+  `destination_object_type` varbinary(50) NOT NULL,
+  `destination_account_id` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `destination_object_href` text COLLATE utf8_unicode_ci,
+  `is_trashed` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `created_date` double(13,3) NOT NULL,
+  `updated_date` double(13,3) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uniq_on_u_id_and_src_aid_and_suid_and_dest_aid_and_duid` (`user_id`,`source_object_uid`,`source_account_id`,`destination_object_uid`,`destination_account_id`) USING BTREE,
+  KEY `idx_id_inc` (`id`) USING BTREE,
+  KEY `idx_is_trashed` (`is_trashed`) USING BTREE,
+  KEY `idx_on_user_id_and_src_account_id_and_src_object_uid` (`user_id`,`source_account_id`,`source_object_uid`) USING BTREE,
+  KEY `idx_on_user_id_and_dest_account_id_and_dest_object_uid` (`user_id`,`destination_account_id`,`destination_object_uid`) USING BTREE,
+  KEY `idx_on_src_object_uid` (`source_object_uid`),
+  KEY `idx_on_dest_object_uid` (`destination_object_uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='utf8_unicode_ci'

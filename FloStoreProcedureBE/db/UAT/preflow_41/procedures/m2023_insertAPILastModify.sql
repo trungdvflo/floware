@@ -1,0 +1,26 @@
+CREATE PROCEDURE `m2023_insertAPILastModify`(pvAPIName      VARCHAR(255)
+                                                               ,pnUserId       BIGINT(20)
+                                                               ,pdModifyDate   DOUBLE(13,3))
+alm:BEGIN
+  --
+  DECLARE nModifiedDate   DOUBLE(13,3) DEFAULT 0;
+  DECLARE nId             BIGINT(20) DEFAULT 0;
+  --
+  SELECT alm.id, ifnull(max(alm.api_modified_date), 0)
+    INTO nId, nModifiedDate
+    FROM api_last_modified alm
+    WHERE alm.user_id = pnUserId
+      AND alm.api_name = pvAPIName;
+
+  IF nModifiedDate >= pdModifyDate THEN
+    --
+    SELECT pvAPIName api_name, nModifiedDate updated_date;
+    LEAVE alm;
+    --
+  END IF;
+  -- INSERT last modify
+  SET nId = m2023_insertAPILastModify(pvAPIName, pnUserId, pdModifyDate);
+  --
+  SELECT pvAPIName api_name, pdModifyDate updated_date;
+  --
+END

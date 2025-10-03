@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.0">
+<meta name="plugin-version" content="vim9.0_v1">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=fallback">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.Folded { color: #0000c0; background-color: #a8a8a8; padding-bottom: 1px; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>db/STAGE/preflow_40/procedures/c2022_updateChannel.sql</th>
+<th>db/PROD/preflow_40/procedures/c2022_updateChannel.sql</th>
+</tr><tr>
+<td><div>
+<pre>
+<span class="Folded">+--  4 lines: CREATE PROCEDURE `c2022_updateChannel`(memberId      BIGINT(20)---</span>
+                                                              ,avatar        TEXT
+                                                              ,vip           TINYINT(1)
+                                                              ,roomUrl       VARCHAR(2000)
+                                                              ,updatedDate   DOUBLE(13,3))
+BEGIN
+--
+<span class="DiffAdd">--</span><span class="DiffAdd">                                                                              </span>
+  DECLARE nMemberID   BIGINT(20);
+  DECLARE nChannelId  BIGINT(20);
+  DECLARE isCreator   TINYINT(1);
+  -- verify existed member
+  SELECT cm.id, cm.channel_id, cm.is_creator
+    INTO nMemberID, nChannelId, isCreator
+<span class="Folded">+-- 12 lines: FROM conference_member cm-----------------------------------------</span>
+          ,cp.vip              = CASE WHEN ifnull(vip, 'NA') = 'NA' THEN cp.vip ELSE vip END
+          ,cp.updated_date     = updatedDate
+     WHERE cp.id            = memberId
+       AND cp.user_id       = userId
+       AND cp.channel_id    = nChannelId;
+    --
+<span class="DiffChange">    IF ifnull(isCreator, 0) &gt; 0 </span><span class="DiffText">AND NOT isnull(roomUrl) </span><span class="DiffChange">THEN                    </span>
+      --
+     UPDATE conference_channel cc
+<span class="DiffChange">        SET cc.room_url = </span><span class="DiffText">ifnull(roomUrl, '')</span><span class="DiffChange">                                   </span>
+      WHERE cc.id = nChannelId;
+      --
+    END IF;
+    --
+    SELECT cm.id id, cc.room_url
+<span class="DiffChange">             ,cm.vip, cm.email, cm.is_creator, c</span><span class="DiffText">c</span><span class="DiffChange">.uid, cm.created_date, cm.updated_date, ifnull(cm.revoke_time,0) revoke_time</span>
+             ,nChannelId channel_id
+              ,COALESCE(cm.title, cc.title) title
+         FROM conference_channel cc
+         JOIN conference_member cm ON (cc.id = cm.channel_id)
+        WHERE cc.id = nChannelId
+          AND cm.id = nMemberId;
+<span class="Folded">+--  3 lines: ------------------------------------------------------------------</span>
+</pre>
+</div></td>
+<td><div>
+<pre>
+<span class="Folded">+--  4 lines: CREATE PROCEDURE `c2022_updateChannel`(memberId      BIGINT(20)---</span>
+                                                              ,avatar        TEXT
+                                                              ,vip           TINYINT(1)
+                                                              ,roomUrl       VARCHAR(2000)
+                                                              ,updatedDate   DOUBLE(13,3))
+BEGIN
+--
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+  DECLARE nMemberID   BIGINT(20);
+  DECLARE nChannelId  BIGINT(20);
+  DECLARE isCreator   TINYINT(1);
+  -- verify existed member
+  SELECT cm.id, cm.channel_id, cm.is_creator
+    INTO nMemberID, nChannelId, isCreator
+<span class="Folded">+-- 12 lines: FROM conference_member cm-----------------------------------------</span>
+          ,cp.vip              = CASE WHEN ifnull(vip, 'NA') = 'NA' THEN cp.vip ELSE vip END
+          ,cp.updated_date     = updatedDate
+     WHERE cp.id            = memberId
+       AND cp.user_id       = userId
+       AND cp.channel_id    = nChannelId;
+    --
+<span class="DiffChange">    IF ifnull(isCreator, 0) &gt; 0 THEN</span><span class="DiffChange">                                            </span>
+      --
+     UPDATE conference_channel cc
+<span class="DiffChange">        SET cc.room_url = </span><span class="DiffText">roomUrl</span><span class="DiffChange">                                               </span>
+      WHERE cc.id = nChannelId;
+      --
+    END IF;
+    --
+    SELECT cm.id id, cc.room_url
+<span class="DiffChange">             ,cm.vip, cm.email, cm.is_creator, c</span><span class="DiffText">m</span><span class="DiffChange">.uid, cm.created_date, cm.updated_date, ifnull(cm.revoke_time,0) revoke_time</span>
+             ,nChannelId channel_id
+              ,COALESCE(cm.title, cc.title) title
+         FROM conference_channel cc
+         JOIN conference_member cm ON (cc.id = cm.channel_id)
+        WHERE cc.id = nChannelId
+          AND cm.id = nMemberId;
+<span class="Folded">+--  3 lines: ------------------------------------------------------------------</span>
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+

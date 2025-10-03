@@ -1,0 +1,21 @@
+CREATE TABLE `flo_invalid_link` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `link_id` bigint(20) NOT NULL,
+  `link_type` varchar(45) NOT NULL,
+  `object_type` varbinary(50) NOT NULL,
+  `object_uid` varbinary(1000) NOT NULL,
+  `created_date` double(13,3) NOT NULL,
+  `updated_date` double(13,3) NOT NULL,
+  `deleted_date` double(13,3) DEFAULT NULL,
+  `is_processing` tinyint(1) NOT NULL DEFAULT '0',
+  `considering` tinyint(1) NOT NULL DEFAULT '0',
+  `collection_id` bigint(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unq_on_user_and_object` (`user_id`,`link_id`,`link_type`,`object_type`,`object_uid`,`deleted_date`),
+  KEY `idx_updated_date` (`updated_date`),
+  KEY `idx_created_date` (`created_date`),
+  KEY `idx_deleted_date` (`deleted_date`),
+  KEY `id_to_delete` (`considering`,`is_processing`,`deleted_date`),
+  KEY `idx_to_delete` (`considering`,`is_processing`,`deleted_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1

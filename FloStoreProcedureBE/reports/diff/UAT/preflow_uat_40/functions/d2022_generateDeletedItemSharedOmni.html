@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.0">
+<meta name="plugin-version" content="vim9.0_v2">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=none">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.Folded { color: #0000c0; background-color: #a8a8a8; padding-bottom: 1px; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>db/DEV/preflow_40/functions/d2022_generateDeletedItemSharedOmni.sql</th>
+<th>db/UAT/preflow_uat_40/functions/d2022_generateDeletedItemSharedOmni.sql</th>
+</tr><tr>
+<td><div>
+<pre>
+<span class="Folded">+-- 13 lines: CREATE FUNCTION `d2022_generateDeletedItemSharedOmni`(pvItemType      VARCHAR(255)</span>
+  INSERT INTO deleted_item
+        (item_id,   item_type, user_id, item_uid, is_recovery, created_date, updated_date)
+  value (pnItemId, pvItemType, pnUserId,      '',           0,  dDeletedDate, dDeletedDate);
+  --
+  IF bAlmComment THEN
+     --
+<span class="DiffChange">     SET nReturn = m</span><span class="DiffText">2023</span><span class="DiffChange">_insertAPILastModify('collection_comment', pnUserId, dDeletedDate);</span>
+     --
+  ELSEIF ifnull(pvItemType, 'NA') &lt;&gt; 'NA' THEN
+    --
+<span class="DiffChange">    SET nReturn = m</span><span class="DiffText">2023</span><span class="DiffChange">_insertAPILastModify(lower(pvItemType), pnUserId, dDeletedDate);</span>
+    --
+  END IF;
+  SELECT last_insert_id() INTO nReturn;
+  # main DELETE
+  -- CALL FOR MEMBER
+  IF ifnull(pnCollectionId, 0) &gt; 0 THEN
+<span class="Folded">+-- 18 lines: ------------------------------------------------------------------</span>
+</pre>
+</div></td>
+<td><div>
+<pre>
+<span class="Folded">+-- 13 lines: CREATE FUNCTION `d2022_generateDeletedItemSharedOmni`(pvItemType      VARCHAR(255)</span>
+  INSERT INTO deleted_item
+        (item_id,   item_type, user_id, item_uid, is_recovery, created_date, updated_date)
+  value (pnItemId, pvItemType, pnUserId,      '',           0,  dDeletedDate, dDeletedDate);
+  --
+  IF bAlmComment THEN
+     --
+<span class="DiffChange">     SET nReturn = m</span><span class="DiffText">odify</span><span class="DiffChange">_insertAPILastModify('collection_comment', pnUserId, dDeletedDate);</span>
+     --
+  ELSEIF ifnull(pvItemType, 'NA') &lt;&gt; 'NA' THEN
+    --
+<span class="DiffChange">    SET nReturn = m</span><span class="DiffText">odify</span><span class="DiffChange">_insertAPILastModify(lower(pvItemType), pnUserId, dDeletedDate);</span>
+    --
+  END IF;
+  SELECT last_insert_id() INTO nReturn;
+  # main DELETE
+  -- CALL FOR MEMBER
+  IF ifnull(pnCollectionId, 0) &gt; 0 THEN
+<span class="Folded">+-- 18 lines: ------------------------------------------------------------------</span>
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+

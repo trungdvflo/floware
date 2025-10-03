@@ -1,0 +1,34 @@
+{
+  "columns": {
+    "missing": {
+      "calling_history": [
+        "isOwner"
+      ],
+      "chime_chat_channel": [
+        "channel_id"
+      ]
+    },
+    "updated": 13
+  },
+  "functions": {
+    "deprecated": 2,
+    "new": 1,
+    "ote": 0,
+    "updated": 3
+  },
+  "indexes": {
+    "updated": 2
+  },
+  "procedures": {
+    "deprecated": 0,
+    "new": 0,
+    "ote": 0,
+    "updated": 16
+  },
+  "tables": {
+    "deprecated": 7,
+    "new": 1,
+    "ote": 0,
+    "updated": 15
+  }
+}

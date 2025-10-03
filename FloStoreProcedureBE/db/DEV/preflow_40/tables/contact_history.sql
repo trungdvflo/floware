@@ -1,0 +1,21 @@
+CREATE TABLE `contact_history` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `source_object_uid` varbinary(1000) NOT NULL,
+  `source_object_type` varbinary(50) NOT NULL,
+  `source_account_id` bigint(20) unsigned DEFAULT '0',
+  `source_object_href` text,
+  `destination_object_uid` varbinary(1000) NOT NULL,
+  `destination_object_type` varbinary(50) NOT NULL,
+  `destination_account_id` bigint(20) unsigned DEFAULT '0',
+  `destination_object_href` text,
+  `action` tinyint(4) NOT NULL DEFAULT '0',
+  `action_data` text,
+  `path` varchar(255) CHARACTER SET utf8 DEFAULT '',
+  `is_trashed` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `created_date` double(13,3) NOT NULL,
+  `updated_date` double(13,3) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_on_source` (`source_account_id`,`source_object_type`,`source_object_uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='utf8_unicode_ci'

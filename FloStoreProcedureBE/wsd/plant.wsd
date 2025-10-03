@@ -1,0 +1,46 @@
+@startuml
+
+title Export and Migration Process (CI/CD)
+
+actor "DevOps / DBA" as devOps
+database "DEV" as dev
+database "UAT" as uat
+database "STAGING" as staging
+database "PRODUCTION" as prod
+participant "Git Repo" as git
+activate dev
+devOps -[#purple]> dev: Start process migrate (DEV and UAT)
+git <-[#blue] dev: Export DDL (from DEV)
+deactivate dev
+activate git
+activate uat
+git <-[#blue] uat: Export DDL (from UAT)
+git -[#purple]> git: Compare DDL (DEV and UAT)
+git -[#lime]> uat: Migrate (DEV to UAT)
+git <-[#lime]- uat: Backup DDL (UAT)
+deactivate git
+
+devOps -[#purple]> uat: Start process migrate (UAT and STAGING)
+git <-[#blue] uat: Export DDL (from UAT)
+deactivate uat
+activate git
+activate staging
+git <-[#blue] staging: Export DDL (from STAGING)
+git -[#purple]> git: Compare DDL (UAT and STAGING)
+git -[#lime]> staging: Migrate (UAT to STAGING)
+git <-[#lime]- staging: Backup DDL (STAGING)
+deactivate git
+
+devOps -[#purple]> staging: Start process migrate (STAGING and PRODUCTION)
+git <-[#blue] staging: Export DDL (from STAGING)
+deactivate staging
+activate git
+activate prod
+git <-[#blue] prod: Export DDL (from PRODUCTION)
+git -[#purple]> git: Compare DDL (STAGING and PRODUCTION)
+git -[#lime]> prod: Migrate (STAGING to PRODUCTION)
+git <-[#lime]- prod: Backup DDL (PRODUCTION)
+deactivate git
+deactivate prod
+
+@enduml

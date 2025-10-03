@@ -1,0 +1,21 @@
+CREATE TABLE `metadata_email` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `object_uid` varbinary(1000) NOT NULL,
+  `object_type` varbinary(50) NOT NULL,
+  `account_id` bigint(20) unsigned DEFAULT '0',
+  `subject` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `message_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `from` json NOT NULL,
+  `to` json NOT NULL,
+  `cc` json DEFAULT NULL,
+  `bcc` json DEFAULT NULL,
+  `received_date` double(13,3) DEFAULT NULL,
+  `sent_date` double(13,3) DEFAULT NULL,
+  `snippet` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_date` double(13,3) NOT NULL,
+  `updated_date` double(13,3) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uniq_on_user_id_and_account_id_and_obj_uid_and_obj_type` (`user_id`,`account_id`,`object_uid`,`object_type`) USING BTREE,
+  KEY `idx_user_id` (`user_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci

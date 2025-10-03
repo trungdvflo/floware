@@ -1,0 +1,22 @@
+CREATE TABLE `cal_note` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `uid` varbinary(1000) DEFAULT NULL,
+  `calendarid` int(11) NOT NULL,
+  `calendar_object_id` int(11) unsigned DEFAULT NULL,
+  `uri` varbinary(1000) DEFAULT NULL,
+  `star` tinyint(1) unsigned DEFAULT '0',
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `trashed` tinyint(1) DEFAULT '0',
+  `created_date` double(13,3) NOT NULL,
+  `updated_date` double(13,3) DEFAULT NULL,
+  `summary` text COLLATE utf8mb4_unicode_ci,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `unique_idx_cal_note_uid_calendarid` (`uid`,`calendarid`) USING BTREE,
+  KEY `idx_is_trashed` (`trashed`) USING BTREE,
+  KEY `idx_calnote_uid` (`uid`) USING BTREE,
+  KEY `idx_calnote_calendarid_uri` (`calendarid`,`uri`) USING BTREE,
+  KEY `fk_cal_note_calendarobjectid_id` (`calendar_object_id`) USING BTREE,
+  KEY `idx_calnote_uri` (`uri`),
+  FULLTEXT KEY `idx_calnote_summary_description` (`summary`,`description`),
+  CONSTRAINT `fk_cal_note_calendarobjectid_id` FOREIGN KEY (`calendar_object_id`) REFERENCES `calendarobjects` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC

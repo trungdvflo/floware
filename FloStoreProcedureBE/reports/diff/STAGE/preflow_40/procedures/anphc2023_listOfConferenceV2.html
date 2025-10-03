@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.0">
+<meta name="plugin-version" content="vim9.0_v2">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=none">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.Folded { color: #0000c0; background-color: #a8a8a8; padding-bottom: 1px; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>db/UAT/preflow_uat_40/procedures/anphc2023_listOfConferenceV2.sql</th>
+<th>db/STAGE/preflow_40/procedures/anphc2023_listOfConferenceV2.sql</th>
+</tr><tr>
+<td><div>
+<pre>
+<span class="Folded">+-- 30 lines: CREATE PROCEDURE `anphc2023_listOfConferenceV2`(pvKeyword       TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci</span>
+  --
+  SET nOFFSET = IF(ifnull(pnPageNo, 0) &gt; 0, (pnPageNo - 1) * pnPageSize, 0);
+  --
+  SET SESSION group_concat_max_len = 500000;
+  --
+  EXPLAIN SELECT cm.id, cm.channel_id, cc.uid, cm.email, cm.is_creator, cm.description
+<span class="DiffAdd">        -- ,ifnull(lco.collection_id, 0) collection_id</span><span class="DiffAdd">                          </span>
+        ,cm.vip, cm.revoke_time, greatest(cm.updated_date, cc.updated_date) updated_date, cm.created_date, cm.join_time
+        ,ifnull(cm.view_chat_history, 1) view_chat_history
+        ,cc.room_url, ifnull(cc.enable_chat_history, 1) enable_chat_history
+        ,COALESCE(cm.title, cc.title, '') title
+        ,cc.title share_title
+        ,ch.start_time, ch.end_time, ch.action_time, ch.status, ch.type
+<span class="Folded">+--  4 lines: ,cc.last_used-----------------------------------------------------</span>
+                       ,'email',cm1.email
+                       ,'is_creator', cm1.is_creator
+                       ,'revoke_time', cm1.revoke_time
+                      )),']'
+                    ) participants
+     FROM conference_channel cc
+<span class="DiffAdd">     -- me</span><span class="DiffAdd">                                                                      </span>
+     JOIN conference_member cm ON (cm.channel_id = cc.id AND cm.user_id = pnUserId)
+<span class="DiffAdd">     -- other member</span><span class="DiffAdd">                                                            </span>
+LEFT JOIN conference_member cm1 ON (cc.id = cm1.channel_id)
+<span class="DiffAdd"> </span><span class="DiffAdd">                                                                               </span>
+LEFT JOIN (SELECT ch.member_id, ch.user_id
+<span class="DiffChange">                 ,ch.start_time, ch.end_time, ch.action_time, ch.status, ch.type</span>
+<span class="DiffChange">             FROM conference_history ch</span><span class="DiffChange">                                         </span>
+<span class="DiffChange">            WHERE ch.user_id = pnUserId</span><span class="DiffChange">                                         </span>
+<span class="DiffChange">              AND ch.id = (SELECT ch1.id</span><span class="DiffChange">                                        </span>
+<span class="DiffChange">                             FROM conference_history ch1</span><span class="DiffChange">                        </span>
+<span class="DiffChange">                            WHERE ch1.user_id = pnUserId</span><span class="DiffChange">                        </span>
+<span class="DiffChange">                              AND ch1.member_id = ch.member_id</span><span class="DiffChange">                  </span>
+<span class="DiffChange">                            ORDER BY ch1.start_time DESC</span><span class="DiffChange">                        </span>
+<span class="DiffChange">                            LIMIT 1</span><span class="DiffChange">                                             </span>
+<span class="DiffChange">                           )</span><span class="DiffChange">                                                    </span>
+                          ) ch ON (cm.id = ch.member_id AND cm.user_id = ch.user_id)
+<span class="DiffText">                         </span><span class="DiffChange">                                                       </span>
+<span class="DiffChange"> </span><span class="DiffText">LEFT JOIN linked_collection_object lco ON (cc.uid = lco.object_u</span><span class="DiffChange">id             </span>
+<span class="DiffChange">                                           </span><span class="DiffText"> AND cm.user_id = lco.user_id</span><span class="DiffChange">        </span>
+<span class="DiffChange">                                           </span><span class="DiffText"> AND lco.object_type = 'CONFERENCING' </span>
+<span class="DiffChange">                                           </span><span class="DiffText"> AND (pvColIectionds IS NULL OR ifnull(lco.collection_id, 0) &gt; 0)</span>
+<span class="DiffAdd">                                            AND ifnull(lco.is_trashed, 0) = 0</span><span class="DiffAdd">   </span>
+                                           )
+    WHERE cm.user_id = pnUserId
+      AND (cm.revoke_time = 0 -- NOT revoked
+           OR (cm.revoke_time &gt; 0 AND cm.user_id = pnUserId)) -- revoked but me
+      AND (cm1.revoke_time = 0 -- NOT revoked
+<span class="DiffChange">           OR (cm1.revoke_time &gt; 0 AND cm1.user_id = pnUserId)) -- revoked but me</span><span class="DiffText">      </span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+      AND (
+          cm.updated_date &lt; IF(ifnull(pnModifiedLT, 0) &gt; 0, pnModifiedLT, unix_timestamp() + 1)
+          OR
+          cc.updated_date &lt; IF(ifnull(pnModifiedLT, 0) &gt; 0, pnModifiedLT, unix_timestamp() + 1)
+          )
+      AND (
+<span class="Folded">+-- 64 lines: cm.updated_date &gt;= IF(ifnull(pnModifiedGTE, 0) &gt; 0, pnModifiedGTE, 0)</span>
+      HAVING nFilterType &lt; 5
+           OR (nFilterType = 5
+              AND count(DISTINCT cm1.id) = 2) -- only 2 member contained me
+      ORDER BY
+        (CASE
+           --
+<span class="DiffChange">           WHEN NOT isnull(pnModifiedLT) </span><span class="DiffText">AND isnull(pnPageNo) </span><span class="DiffChange">                  </span>
+<span class="DiffChange">           </span><span class="DiffText">   THEN GREATEST(cc.updated_date, cm.updated_date</span><span class="DiffChange">)                   </span>
+<span class="DiffChange">           </span><span class="DiffText">WHEN ifnull(pnPageNo, 0) &gt; 0 AND INSTR(vSort, &quot;-&quot;) </span><span class="DiffChange">                  </span>
+<span class="DiffAdd">             THEN -- DEFAULT WHEN no ASC active</span><span class="DiffAdd">                                 </span>
+             --
+             CASE vFieldSort
+               --
+               WHEN 'start_time'   THEN GREATEST(ifnull(ch.start_time, 0), cc.created_date, cc.last_used)
+               WHEN 'action_time'  THEN ch.action_time
+               WHEN 'created_date' THEN cm.created_date
+<span class="Folded">+--  4 lines: WHEN 'title'        THEN ifnull(cm.title, cc.title)---------------</span>
+             END
+           --
+         END) DESC,
+        (CASE
+           --
+           WHEN NOT isnull(pnMinId) THEN cm.id
+<span class="DiffChange">           WHEN NOT isnull(pnModifiedGTE) </span><span class="DiffText">AND isnull(pnPageNo)</span><span class="DiffChange">                  </span>
+<span class="DiffChange">           </span><span class="DiffText">  THEN GREATEST(cc.updated_date, cm.updated_date)</span><span class="DiffChange">                    </span>
+<span class="DiffAdd">           WHEN ifnull(pnPageNo, 0) &gt; 0 AND INSTR(vSort, &quot;+&quot;) THEN</span><span class="DiffAdd">              </span>
+             --
+             CASE vFieldSort
+               --
+               WHEN 'start_time'   THEN GREATEST(ifnull(ch.start_time, 0), cc.created_date, cc.last_used)
+               WHEN 'action_time'  THEN ch.action_time
+               WHEN 'created_date' THEN cm.created_date
+<span class="Folded">+-- 14 lines: WHEN 'title'        THEN ifnull(cm.title, cc.title)---------------</span>
+</pre>
+</div></td>
+<td><div>
+<pre>
+<span class="Folded">+-- 30 lines: CREATE PROCEDURE `anphc2023_listOfConferenceV2`(pvKeyword       TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci</span>
+  --
+  SET nOFFSET = IF(ifnull(pnPageNo, 0) &gt; 0, (pnPageNo - 1) * pnPageSize, 0);
+  --
+  SET SESSION group_concat_max_len = 500000;
+  --
+  EXPLAIN SELECT cm.id, cm.channel_id, cc.uid, cm.email, cm.is_creator, cm.description
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+        ,cm.vip, cm.revoke_time, greatest(cm.updated_date, cc.updated_date) updated_date, cm.created_date, cm.join_time
+        ,ifnull(cm.view_chat_history, 1) view_chat_history
+        ,cc.room_url, ifnull(cc.enable_chat_history, 1) enable_chat_history
+        ,COALESCE(cm.title, cc.title, '') title
+        ,cc.title share_title
+        ,ch.start_time, ch.end_time, ch.action_time, ch.status, ch.type
+<span class="Folded">+--  4 lines: ,cc.last_used-----------------------------------------------------</span>
+                       ,'email',cm1.email
+                       ,'is_creator', cm1.is_creator
+                       ,'revoke_time', cm1.revoke_time
+                      )),']'
+                    ) participants
+     FROM conference_channel cc
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+     JOIN conference_member cm ON (cm.channel_id = cc.id AND cm.user_id = pnUserId)
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+LEFT JOIN conference_member cm1 ON (cc.id = cm1.channel_id)
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+LEFT JOIN (SELECT ch.member_id, ch.user_id
+<span class="DiffChange">                 </span><span class="DiffText">  </span><span class="DiffChange">,ch.start_time, ch.end_time, ch.action_time, ch.status, ch.type</span>
+<span class="DiffChange">             </span><span class="DiffText">  </span><span class="DiffChange">FROM conference_history ch                                       </span>
+<span class="DiffChange">            </span><span class="DiffText">  </span><span class="DiffChange">WHERE ch.user_id = pnUserId                                       </span>
+<span class="DiffChange">              </span><span class="DiffText">  </span><span class="DiffChange">AND ch.id = (SELECT ch1.id                                      </span>
+<span class="DiffChange">                             </span><span class="DiffText">  </span><span class="DiffChange">FROM conference_history ch1                      </span>
+<span class="DiffChange">                            </span><span class="DiffText">  </span><span class="DiffChange">WHERE ch1.user_id = pnUserId                      </span>
+<span class="DiffChange">                              </span><span class="DiffText">  </span><span class="DiffChange">AND ch1.member_id = ch.member_id                </span>
+<span class="DiffChange">                            </span><span class="DiffText">    </span><span class="DiffChange">ORDER BY ch1.start_time DESC                    </span>
+<span class="DiffChange">                            </span><span class="DiffText">    </span><span class="DiffChange">LIMIT 1                                         </span>
+<span class="DiffChange">                           </span><span class="DiffText">   </span><span class="DiffChange">)                                                 </span>
+                          ) ch ON (cm.id = ch.member_id AND cm.user_id = ch.user_id)
+<span class="DiffText">LEFT JOIN linked_collection_object lco ON (cc.uid = lco.object_uid</span><span class="DiffChange">              </span>
+<span class="DiffChange"> </span><span class="DiffText">                                          AND cm.user_id = lco.user_</span><span class="DiffChange">id         </span>
+<span class="DiffChange">                                           </span><span class="DiffText">AND lco.object_type = 'CONFERENCING'</span><span class="DiffChange"> </span>
+<span class="DiffChange">                                           </span><span class="DiffText">AND (pvColIectionds IS NULL OR ifnull(lco.collection_id, 0) &gt; 0)</span>
+<span class="DiffChange">                                           </span><span class="DiffText">AND ifnull(lco.is_trashed, 0) = 0</span><span class="DiffChange">    </span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+                                           )
+    WHERE cm.user_id = pnUserId
+      AND (cm.revoke_time = 0 -- NOT revoked
+           OR (cm.revoke_time &gt; 0 AND cm.user_id = pnUserId)) -- revoked but me
+      AND (cm1.revoke_time = 0 -- NOT revoked
+<span class="DiffChange">           OR (cm1.revoke_time &gt; 0 AND cm1.user_id = pnUserId)) -- revoked but me</span>
+<span class="DiffAdd">      -- AND cm.updated_date  &lt;  IF(ifnull(pnModifiedLT, 0) &gt; 0, pnModifiedLT, unix_timestamp() + 1)</span>
+<span class="DiffAdd">      -- AND cm.updated_date  &gt;= IF(ifnull(pnModifiedGTE, 0) &gt; 0, pnModifiedGTE, 0)</span>
+<span class="DiffAdd">      </span><span class="DiffAdd">                                                                          </span>
+      AND (
+          cm.updated_date &lt; IF(ifnull(pnModifiedLT, 0) &gt; 0, pnModifiedLT, unix_timestamp() + 1)
+          OR
+          cc.updated_date &lt; IF(ifnull(pnModifiedLT, 0) &gt; 0, pnModifiedLT, unix_timestamp() + 1)
+          )
+      AND (
+<span class="Folded">+-- 64 lines: cm.updated_date &gt;= IF(ifnull(pnModifiedGTE, 0) &gt; 0, pnModifiedGTE, 0)</span>
+      HAVING nFilterType &lt; 5
+           OR (nFilterType = 5
+              AND count(DISTINCT cm1.id) = 2) -- only 2 member contained me
+      ORDER BY
+        (CASE
+           --
+<span class="DiffChange">           WHEN NOT isnull(pnModifiedLT) </span><span class="DiffText">THEN cm.updated_date</span><span class="DiffChange">                   </span>
+<span class="DiffChange">           </span><span class="DiffText">WHEN (ifnull(pnPageNo, 0) &gt; 0 OR (isnull(pnMinId) AND isnull(pnModifiedGTE))</span><span class="DiffChange">)</span>
+<span class="DiffChange">           </span><span class="DiffText">      AND INSTR(vSort, &quot;-&quot;) THEN -- DEFAULT WHEN no ASC active</span><span class="DiffChange">       </span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+             --
+             CASE vFieldSort
+               --
+               WHEN 'start_time'   THEN GREATEST(ifnull(ch.start_time, 0), cc.created_date, cc.last_used)
+               WHEN 'action_time'  THEN ch.action_time
+               WHEN 'created_date' THEN cm.created_date
+<span class="Folded">+--  4 lines: WHEN 'title'        THEN ifnull(cm.title, cc.title)---------------</span>
+             END
+           --
+         END) DESC,
+        (CASE
+           --
+           WHEN NOT isnull(pnMinId) THEN cm.id
+<span class="DiffChange">           WHEN NOT isnull(pnModifiedGTE) </span><span class="DiffText">THEN cm.updated_date</span><span class="DiffChange">                  </span>
+<span class="DiffChange">           </span><span class="DiffText">WHEN INSTR(vSort, &quot;+&quot;) THEN</span><span class="DiffChange">                                          </span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+             --
+             CASE vFieldSort
+               --
+               WHEN 'start_time'   THEN GREATEST(ifnull(ch.start_time, 0), cc.created_date, cc.last_used)
+               WHEN 'action_time'  THEN ch.action_time
+               WHEN 'created_date' THEN cm.created_date
+<span class="Folded">+-- 14 lines: WHEN 'title'        THEN ifnull(cm.title, cc.title)---------------</span>
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+

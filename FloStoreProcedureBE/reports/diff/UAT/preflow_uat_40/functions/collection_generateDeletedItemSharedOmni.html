@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.0">
+<meta name="plugin-version" content="vim9.0_v2">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=none">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.Folded { color: #0000c0; background-color: #a8a8a8; padding-bottom: 1px; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>db/DEV/preflow_40/functions/collection_generateDeletedItemSharedOmni.sql</th>
+<th>db/UAT/preflow_uat_40/functions/collection_generateDeletedItemSharedOmni.sql</th>
+</tr><tr>
+<td><div>
+<pre>
+<span class="Folded">+--  1 line: CREATE FUNCTION `collection_generateDeletedItemSharedOmni`(pvItemType      VARCHAR(255)</span>
+                                                                            ,pnCollectionId   BIGINT(20)
+                                                                            ,pnItemId         BIGINT(20) -- item_id: depend ON item type
+                                                                            ,pnDeleteDate     DOUBLE(13,3)
+                                                                            ,pnUserId         BIGINT(20) -- owner
+                                                                       ) RETURNS INT(11)
+BEGIN
+<span class="DiffChange">  --</span><span class="DiffText"> DEPRECATED</span><span class="DiffChange">                                                                 </span>
+  DECLARE nReturn          BIGINT(20) DEFAULT 0;
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+  # main DELETE
+<span class="DiffChange">  </span><span class="DiffText">SET nReturn = d2022_generateDeletedItemSharedOmni(pvItemType, pnCollectionId, pnItemId, pnDeleteDate, pnUserId);</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+  --
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+  RETURN nReturn;
+  --
+END
+</pre>
+</div></td>
+<td><div>
+<pre>
+<span class="Folded">+--  1 line: CREATE FUNCTION `collection_generateDeletedItemSharedOmni`(pvItemType      VARCHAR(255)</span>
+                                                                            ,pnCollectionId   BIGINT(20)
+                                                                            ,pnItemId         BIGINT(20) -- item_id: depend ON item type
+                                                                            ,pnDeleteDate     DOUBLE(13,3)
+                                                                            ,pnUserId         BIGINT(20) -- owner
+                                                                       ) RETURNS INT(11)
+BEGIN
+<span class="DiffChange">  --</span><span class="DiffChange">                                                                            </span>
+  DECLARE nReturn          BIGINT(20) DEFAULT 0;
+<span class="DiffAdd">  DECLARE dDeletedDate     DOUBLE(13,3) DEFAULT ifnull(pnDeleteDate, unix_timestamp(now(3)));</span>
+<span class="DiffAdd">  DECLARE bAlmComment      TINYINT(1) DEFAULT IF(ifnull(pvItemType, 'NA') = 'COLLECTION_COMMENT' OR ifnull(pvItemType, 'NA') = 'COMMENT_ATTACHMENT', 1, 0);</span>
+<span class="DiffAdd"> </span><span class="DiffAdd">                                                                               </span>
+  # main DELETE
+<span class="DiffChange">  </span><span class="DiffText">INSERT INTO deleted_item</span><span class="DiffChange">                                                      </span>
+<span class="DiffAdd">        (item_id,   item_type, user_id, item_uid, is_recovery, created_date, updated_date)</span>
+<span class="DiffAdd">  value (pnItemId, pvItemType, pnUserId,      '',           0,  dDeletedDate, dDeletedDate);</span>
+  --
+<span class="DiffAdd">  IF bAlmComment THEN</span><span class="DiffAdd">                                                           </span>
+<span class="DiffAdd">     --</span><span class="DiffAdd">                                                                         </span>
+<span class="DiffAdd">     SET nReturn = modify_insertAPILastModify('collection_comment', pnUserId, dDeletedDate);</span>
+<span class="DiffAdd">     --</span><span class="DiffAdd">                                                                         </span>
+<span class="DiffAdd">  ELSEIF ifnull(pvItemType, 'NA') &lt;&gt; 'NA' THEN</span><span class="DiffAdd">                                  </span>
+<span class="DiffAdd">    --</span><span class="DiffAdd">                                                                          </span>
+<span class="DiffAdd">    SET nReturn = modify_insertAPILastModify(lower(pvItemType), pnUserId, dDeletedDate);</span>
+<span class="DiffAdd">    --</span><span class="DiffAdd">                                                                          </span>
+<span class="DiffAdd">  END IF;</span><span class="DiffAdd">                                                                       </span>
+<span class="DiffAdd">  SELECT last_insert_id() INTO nReturn;</span><span class="DiffAdd">                                         </span>
+<span class="DiffAdd">  # main DELETE</span><span class="DiffAdd">                                                                 </span>
+<span class="DiffAdd">  -- CALL FOR MEMBER</span><span class="DiffAdd">                                                            </span>
+<span class="DiffAdd">  IF ifnull(pnCollectionId, 0) &gt; 0 THEN</span><span class="DiffAdd">                                         </span>
+<span class="DiffAdd">    --</span><span class="DiffAdd">                                                                          </span>
+<span class="DiffAdd">    SET nReturn = collection_generateDeletedItemForMember(pvItemType, pnCollectionId, pnItemId, dDeletedDate);</span>
+<span class="DiffAdd">    --</span><span class="DiffAdd">                                                                          </span>
+<span class="DiffAdd">    IF bAlmComment THEN</span><span class="DiffAdd">                                                         </span>
+<span class="DiffAdd">      --</span><span class="DiffAdd">                                                                        </span>
+<span class="DiffAdd">      SET nReturn = collection_sendLastModifyShare('collection_comment', pnCollectionId, dDeletedDate);</span>
+<span class="DiffAdd">      --</span><span class="DiffAdd">                                                                        </span>
+<span class="DiffAdd">      ELSEIF ifnull(pvItemType, 'NA') &lt;&gt; 'NA' THEN</span><span class="DiffAdd">                              </span>
+<span class="DiffAdd">      --</span><span class="DiffAdd">                                                                        </span>
+<span class="DiffAdd">      SET nReturn = collection_sendLastModifyShare(lower(pvItemType), pnCollectionId, dDeletedDate);</span>
+<span class="DiffAdd">      --</span><span class="DiffAdd">                                                                        </span>
+<span class="DiffAdd">    END IF;</span><span class="DiffAdd">                                                                     </span>
+<span class="DiffAdd">    --</span><span class="DiffAdd">                                                                          </span>
+<span class="DiffAdd">  END IF;</span><span class="DiffAdd">                                                                       </span>
+<span class="DiffAdd">  --</span><span class="DiffAdd">                                                                            </span>
+  RETURN nReturn;
+  --
+END
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+

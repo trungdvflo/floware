@@ -1,0 +1,55 @@
+@startuml
+title Git Flow: DEV > UAT > STAGE > PRODUCTION
+
+actor Developer as coder
+participant "Invidual hotfix" as hotfix
+participant "V4.1/feature" as feature
+participant "V4.1/main" as stable
+participant "DEV ENV" as dev
+participant "UAT ENV" as uat
+participant "Stage ENV" as stage
+participant "Production ENV" as prod
+
+
+activate stable
+activate hotfix
+
+stable -[#green]-> hotfix : Check hot fix
+hotfix -[#orange]-> stable: Merge hot fix
+deactivate hotfix
+activate dev
+stable -[#green]-> dev: Deploy hotfix
+dev -> dev: Scan in DEV
+
+stable -[#green]-> feature: Create new-feature
+deactivate stable
+activate feature
+activate uat
+dev -[#green]-> uat: Deploy to UAT via git tag
+
+feature -[#green]-> dev: Deploy new feature
+dev -> dev: Scan in DEV
+deactivate feature
+deactivate dev
+
+uat -> uat: Test in UAT
+uat -> uat: Feedback and Iteration
+uat -[#orange]-> stable: Generate Git tag and merge to Stable
+deactivate uat
+
+activate stage
+activate stable
+stable -[#blue]-> stage: Deploy to Stage
+stage -[#orange]-> stable: Generate git tag
+deactivate stable
+stage -> stage: Test in Stage
+stage -> stage: Feedback and Iteration
+
+activate prod
+stage -[#blue]-> prod: Deploy to Production
+deactivate stage
+
+prod -> prod: Monitor and Maintain
+deactivate prod
+
+@enduml

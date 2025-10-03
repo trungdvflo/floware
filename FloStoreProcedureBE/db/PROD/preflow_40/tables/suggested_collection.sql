@@ -1,0 +1,22 @@
+CREATE TABLE `suggested_collection` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `collection_id` bigint(20) unsigned NOT NULL,
+  `criterion_type` int(11) unsigned DEFAULT '0',
+  `criterion_value` text COLLATE utf8mb4_unicode_ci,
+  `criterion_checksum` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `frequency_used` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `created_date` double(13,3) NOT NULL,
+  `updated_date` double(13,3) DEFAULT NULL,
+  `action_time` double(13,3) NOT NULL DEFAULT '0.000',
+  `account_id` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `third_object_uid` varbinary(1000) NOT NULL DEFAULT '',
+  `third_object_type` tinyint(2) unsigned NOT NULL DEFAULT '0',
+  `object_type` varbinary(50) NOT NULL DEFAULT '',
+  `group_id` bigint(20) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uniq_on_us_id_and_aid_and_cid_and_gid_and_criterion` (`user_id`,`collection_id`,`group_id`,`criterion_type`,`criterion_checksum`,`account_id`) USING BTREE,
+  KEY `idx_collection_id` (`collection_id`) USING BTREE,
+  KEY `idx_user_id` (`user_id`) USING BTREE,
+  KEY `idx_criterion_type` (`criterion_type`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='utf8mb4_unicode_ci'

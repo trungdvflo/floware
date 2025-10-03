@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.0">
+<meta name="plugin-version" content="vim9.0_v1">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=fallback">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.Folded { color: #0000c0; background-color: #a8a8a8; padding-bottom: 1px; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>db/STAGE/preflow_40/procedures/c2023_listOfConferenceHistoryV2.sql</th>
+<th>db/PROD/preflow_40/procedures/c2023_listOfConferenceHistoryV2.sql</th>
+</tr><tr>
+<td><div>
+<pre>
+<span class="Folded">+--  7 lines: CREATE PROCEDURE `c2023_listOfConferenceHistoryV2`(pvKeyword         TEXT</span>
+                                                                   ,pnPageSize        INTEGER(11)
+                                                                   ,pnPageNo          INTEGER(11)
+                                                                   ,pvSort            VARCHAR(128)
+                                                                   ,pnGroupMeetingID  TINYINT(1))
+BEGIN
+  -- CALL c2023_listOfConferenceHistory(?,?,?,?,?,?,?,?,?,?) -- PARAMETERS: [NULL,NULL,46429,&quot;579987&quot;,NULL,NULL,NULL,2,NULL,NULL]
+<span class="DiffAdd">  -- GET conference history WITH duration</span><span class="DiffAdd">                                       </span>
+  DECLARE nOFFSET       INT(11) DEFAULT 0;
+  DECLARE bGroupMI      TINYINT(1) DEFAULT ifnull(pnGroupMeetingID, 0);
+  DECLARE vFieldSort    VARCHAR(50) DEFAULT REPLACE(REPLACE(IFNULL(pvSort, ''), '-', ''), '+', '');
+  DECLARE vSort         VARCHAR(50) DEFAULT IF(IFNULL(pvSort, '') &lt;&gt; ''
+                         AND NOT instr(pvSort, '-')
+                         AND NOT instr(pvSort, '+'), concat('+', pvSort), pvSort);
+  DECLARE vKeyword TEXT DEFAULT concat('%', ifnull(pvKeyword, ''), '%');
+  --
+  SET nOFFSET = IF(ifnull(pnPageNo, 0) &gt; 0, (pnPageNo - 1) * pnPageSize, 0);
+  --
+<span class="DiffAdd">  SET SESSION group_concat_max_len = 500000;</span><span class="DiffAdd">                                    </span>
+<span class="DiffAdd">  --</span><span class="DiffAdd">                                                                            </span>
+  SELECT ch.id, ch.invitee, ifnull(ch.attendees, '[]') lsAttendees
+        ,ch.start_time, ch.end_time
+        ,ch1.durations
+        ,ch.action_time, ch.type, ch.status, ch.organizer, ch.meeting_id
+        ,cc.id channel_id
+        ,ch.external_meeting_id, ch.is_reply, ch.created_date, ch.updated_date
+<span class="Folded">+-- 60 lines: FROM conference_history ch----------------------------------------</span>
+       -- ELSE ch.id
+      END) ASC
+    --
+   LIMIT pnPageSize
+  OFFSET nOFFSET;
+  --
+<span class="DiffAdd">  SET SESSION group_concat_max_len = 1024;</span><span class="DiffAdd">                                      </span>
+<span class="DiffAdd">  --</span><span class="DiffAdd">                                                                            </span>
+END
+</pre>
+</div></td>
+<td><div>
+<pre>
+<span class="Folded">+--  7 lines: CREATE PROCEDURE `c2023_listOfConferenceHistoryV2`(pvKeyword         TEXT</span>
+                                                                   ,pnPageSize        INTEGER(11)
+                                                                   ,pnPageNo          INTEGER(11)
+                                                                   ,pvSort            VARCHAR(128)
+                                                                   ,pnGroupMeetingID  TINYINT(1))
+BEGIN
+  -- CALL c2023_listOfConferenceHistory(?,?,?,?,?,?,?,?,?,?) -- PARAMETERS: [NULL,NULL,46429,&quot;579987&quot;,NULL,NULL,NULL,2,NULL,NULL]
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+  DECLARE nOFFSET       INT(11) DEFAULT 0;
+  DECLARE bGroupMI      TINYINT(1) DEFAULT ifnull(pnGroupMeetingID, 0);
+  DECLARE vFieldSort    VARCHAR(50) DEFAULT REPLACE(REPLACE(IFNULL(pvSort, ''), '-', ''), '+', '');
+  DECLARE vSort         VARCHAR(50) DEFAULT IF(IFNULL(pvSort, '') &lt;&gt; ''
+                         AND NOT instr(pvSort, '-')
+                         AND NOT instr(pvSort, '+'), concat('+', pvSort), pvSort);
+  DECLARE vKeyword TEXT DEFAULT concat('%', ifnull(pvKeyword, ''), '%');
+  --
+  SET nOFFSET = IF(ifnull(pnPageNo, 0) &gt; 0, (pnPageNo - 1) * pnPageSize, 0);
+  --
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+  SELECT ch.id, ch.invitee, ifnull(ch.attendees, '[]') lsAttendees
+        ,ch.start_time, ch.end_time
+        ,ch1.durations
+        ,ch.action_time, ch.type, ch.status, ch.organizer, ch.meeting_id
+        ,cc.id channel_id
+        ,ch.external_meeting_id, ch.is_reply, ch.created_date, ch.updated_date
+<span class="Folded">+-- 60 lines: FROM conference_history ch----------------------------------------</span>
+       -- ELSE ch.id
+      END) ASC
+    --
+   LIMIT pnPageSize
+  OFFSET nOFFSET;
+  --
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+END
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+

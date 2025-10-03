@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.0">
+<meta name="plugin-version" content="vim9.0_v2">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=none">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.Folded { color: #0000c0; background-color: #a8a8a8; padding-bottom: 1px; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>db/DEV/preflow_40/functions/c2023_createConferenceHistorySendInviteV2.sql</th>
+<th>db/UAT/preflow_uat_40/functions/c2023_createConferenceHistorySendInviteV2.sql</th>
+</tr><tr>
+<td><div>
+<pre>
+<span class="Folded">+-- 10 lines: CREATE FUNCTION `c2023_createConferenceHistorySendInviteV2`(pnChannelId  BIGINT(20)</span>
+  DECLARE no_more_rows    boolean;
+  DECLARE nCount          INT DEFAULT 0;
+  DECLARE nReturn         BIGINT(20) DEFAULT 0;
+  DECLARE nUserID         BIGINT(20);
+  DECLARE vUserName       VARCHAR(100);
+  DECLARE nCMID           BIGINT (20);
+<span class="DiffAdd">  DECLARE nMeetingId      BIGINT(20);</span><span class="DiffAdd">                                           </span>
+<span class="DiffAdd"> </span><span class="DiffAdd">                                                                               </span>
+  DECLARE his_cursor CURSOR FOR
+  # Start of: main script;
+  SELECT u.id, cm.id, u.username
+    FROM conference_channel cc
+    JOIN conference_member cm ON (cc.id = cm. channel_id)
+    JOIN user u ON (u. id = cm. user_id)
+<span class="Folded">+--  9 lines: WHERE cc.id = pnChannelId-----------------------------------------</span>
+    FETCH his_cursor INTO nUserID, nCMID, vUserName;
+    -- stop LOOP WHEN no_more_rows
+    IF (no_more_rows) THEN
+      CLOSE his_cursor;
+      LEAVE his_loop;
+    END IF;
+<span class="DiffAdd"> </span><span class="DiffAdd">                                                                               </span>
+<span class="DiffAdd">    IF ifnull(pvMeetingId, '') != '' THEN</span><span class="DiffAdd">                                       </span>
+<span class="DiffAdd">      --</span><span class="DiffAdd">                                                                        </span>
+<span class="DiffAdd">      SELECT ifnull(max(cm.id), 0)</span><span class="DiffAdd">                                              </span>
+<span class="DiffAdd">        INTO nMeetingId </span><span class="DiffAdd">                                                        </span>
+<span class="DiffAdd">        FROM conference_meeting cm</span><span class="DiffAdd">                                              </span>
+<span class="DiffAdd">       WHERE cm.meeting_id = pvMeetingId</span><span class="DiffAdd">                                        </span>
+<span class="DiffAdd">         AND cm.channel_id = pnChannelId;</span><span class="DiffAdd">                                       </span>
+<span class="DiffAdd">      --</span><span class="DiffAdd">                                                                        </span>
+<span class="DiffAdd">      IF nMeetingId = 0 THEN</span><span class="DiffAdd">                                                    </span>
+<span class="DiffAdd">        --</span><span class="DiffAdd">                                                                      </span>
+<span class="DiffAdd">        INSERT INTO conference_meeting</span><span class="DiffAdd">                                          </span>
+<span class="DiffAdd">          (channel_id, meeting_id, user_id, external_meeting_id, created_date, updated_date)</span>
+<span class="DiffAdd">        VALUES</span><span class="DiffAdd">                                                                  </span>
+<span class="DiffAdd">          (pnChannelId, pvMeetingId, pnUserId, pvExMeetingId, unix_timestamp(now(3)), unix_timestamp(now(3)));</span>
+<span class="DiffAdd">        --</span><span class="DiffAdd">                                                                      </span>
+<span class="DiffAdd">        SET nMeetingId = last_insert_id();</span><span class="DiffAdd">                                      </span>
+<span class="DiffAdd">      END IF;</span><span class="DiffAdd">                                                                   </span>
+<span class="DiffAdd">      --</span><span class="DiffAdd">                                                                        </span>
+<span class="DiffAdd">    END IF;</span><span class="DiffAdd">                                                                     </span>
+<span class="DiffAdd"> </span><span class="DiffAdd">                                                                               </span>
+    # main UPDATE
+    INSERT INTO conference_history
+        (user_id, member_id, invitee, start_time, type, status, organizer,
+<span class="DiffChange">         action_time, </span><span class="DiffText">conference_meeting_id, </span><span class="DiffChange">meeting_id, external_meeting_id, created_date, updated_date) </span>
+    VALUES
+        (nUserID, nCMID, vUserName, unix_timestamp(now(3)), pnType, 24, pvOrganizer
+<span class="DiffChange">        ,unix_timestamp(now(3)), </span><span class="DiffText">nMeetingId, </span><span class="DiffChange">ifnull(pvMeetingId, ''), ifnull(pvExMeetingId, ''), unix_timestamp(now(3)), unix_timestamp(now(3)));</span>
+    --
+    SET nReturn = m2023_insertAPILastModify('conference_history', nUserID, unix_timestamp(now(3)));
+    --
+    SET nCount = nCount + 1;
+    # main UPDATE
+  END LOOP his_loop;
+<span class="Folded">+--  4 lines: ------------------------------------------------------------------</span>
+</pre>
+</div></td>
+<td><div>
+<pre>
+<span class="Folded">+-- 10 lines: CREATE FUNCTION `c2023_createConferenceHistorySendInviteV2`(pnChannelId  BIGINT(20)</span>
+  DECLARE no_more_rows    boolean;
+  DECLARE nCount          INT DEFAULT 0;
+  DECLARE nReturn         BIGINT(20) DEFAULT 0;
+  DECLARE nUserID         BIGINT(20);
+  DECLARE vUserName       VARCHAR(100);
+  DECLARE nCMID           BIGINT (20);
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+  DECLARE his_cursor CURSOR FOR
+  # Start of: main script;
+  SELECT u.id, cm.id, u.username
+    FROM conference_channel cc
+    JOIN conference_member cm ON (cc.id = cm. channel_id)
+    JOIN user u ON (u. id = cm. user_id)
+<span class="Folded">+--  9 lines: WHERE cc.id = pnChannelId-----------------------------------------</span>
+    FETCH his_cursor INTO nUserID, nCMID, vUserName;
+    -- stop LOOP WHEN no_more_rows
+    IF (no_more_rows) THEN
+      CLOSE his_cursor;
+      LEAVE his_loop;
+    END IF;
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+<span class="DiffDelete">--------------------------------------------------------------------------------</span>
+    # main UPDATE
+    INSERT INTO conference_history
+        (user_id, member_id, invitee, start_time, type, status, organizer,
+<span class="DiffChange">         action_time, meeting_id, external_meeting_id, created_date, updated_date) </span>
+    VALUES
+        (nUserID, nCMID, vUserName, unix_timestamp(now(3)), pnType, 24, pvOrganizer
+<span class="DiffChange">        ,unix_timestamp(now(3)), ifnull(pvMeetingId, ''), ifnull(pvExMeetingId, ''), unix_timestamp(now(3)), unix_timestamp(now(3)));</span>
+    --
+    SET nReturn = m2023_insertAPILastModify('conference_history', nUserID, unix_timestamp(now(3)));
+    --
+    SET nCount = nCount + 1;
+    # main UPDATE
+  END LOOP his_loop;
+<span class="Folded">+--  4 lines: ------------------------------------------------------------------</span>
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+
