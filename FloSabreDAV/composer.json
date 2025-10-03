@@ -1,0 +1,22 @@
+{
+    "name" : "flo/dav",
+    "description" : "This is the FLO WebDAV server",
+    "require": {
+        "sabre/dav": "4.1.1",
+        "aws/aws-sdk-php": "3.257.11",
+        "graylog2/gelf-php": "dev-master",
+        "vlucas/phpdotenv": "^5.1",
+        "spatie/async":"^1.5",
+        "catfan/medoo": "^2.1.4"
+    },
+    "autoload": {
+        "files": ["flodav/DAV/Bootstrap.php"],
+        "psr-4" : {
+            "Floware\\DAV\\"     : "flodav/DAV/",
+            "Floware\\CalDAV\\"  : "flodav/CalDAV/",
+            "Floware\\CardDAV\\" : "flodav/CardDAV/",
+            "Floware\\DAVACL\\"  : "flodav/DAVACL/",
+            "Floware\\LIB\\"     : "flodav/LIB/"
+        }
+    }
+}
