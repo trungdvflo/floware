@@ -1,0 +1,68 @@
+inherit_from: .rubocop_todo.yml
+require: rubocop-rspec
+Documentation:
+  Enabled: false
+
+Style/RegexpLiteral:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 50
+
+Style/ClassCheck:
+  Enabled: false
+
+Performance/Casecmp:
+  Enabled: false
+
+Style/MultilineTernaryOperator:
+  Enabled: false
+
+Style/VariableNumber:
+  Enabled: false
+
+AllCops:
+  DisplayCopNames: true
+  TargetRubyVersion: 2.3
+  Exclude:
+    - app/controllers/api/web/caldav_controller.rb
+    - app/controllers/api/web/history_controller.rb
+    - app/controllers/api/web/yahoo_caldav_controller.rb
+    - app/controllers/api/web/icloud_controller.rb
+    - app/controllers/api/web/icloud_carddav_controller.rb
+    - app/controllers/api/web/google_caldav_controller.rb
+    - app/controllers/api/web/urlbookmark_controller.rb
+    - app/controllers/api/web/utils.rb
+    - app/controllers/api/web/push_controller.rb
+    - app/controllers/api/utils.rb
+    - app/models/canvas.rb
+    - app/models/cards.rb
+    - app/models/calendar_object.rb
+    - app/models/calendar.rb
+    - app/models/collection.rb
+    - app/models/obj_order.rb
+    - app/models/doc_asset.rb
+    - app/models/obj_collection.rb
+    - app/models/set_account.rb
+    - app/models/url.rb
+    - app/models/project.rb
+    - app/models/import_contact.rb
+    - app/models/calendarchange.rb
+    - lib/*/*.rb
+    - lib/*.rb
+    - lib/*/*/*.rb
+    - db/*.rb
+    - db/*/*.rb
+    - test/*/*.rb
+    - test/*.rb
+    - config/*.rb
+    - config/*/*.rb
+    - spec/*/*.rb
+    - spec/*.rb
+    - spec/*/*/*.rb
+    - spec/*/*/*/*.rb
+    - script/*
+    - bin/*
+    - app/services/*
+    - Gemfile
+    - app/mailers/*

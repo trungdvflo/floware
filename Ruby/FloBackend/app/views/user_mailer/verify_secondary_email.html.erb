@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+		<!-- <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" /> -->
+	</head>  
+  <body>
+      <div class="inHeader inContent" style="background-color: #f3f3f3; font-family: 'Arial'; width: 99%; min-height: 45px; height: auto; margin-top: 10px; font-size: 14px; text-align: center;">
+            <div style="width:90%; margin: 20px auto 0; background-color: #67a8dd; height: 50px;"></div>
+            <table cellpadding="0" cellspacing="0" border="0" width="90%" style="margin:0 auto 10px; background-color: #ffffff; padding: 10px 0 20px">
+                  <tr>
+                        <td align="left" colspan="3" style="font-size:16px; color: #666666;">
+                              <h4 style="margin: 15px 0 0; color: #222; font-size: 24px; text-align: center">Verify secondary email</h4>
+                              <p style="margin: 15px 0 5px; color: #333333; padding: 0 40px">Dear user,</p>
+                              <p style="margin: 15px 0 5px; color: #333333; padding: 0 40px">Please click on the link below to confirm your secondary email with us:</p>
+                              <p style="margin: 15px 0 5px; color: #333333; padding: 0 40px">Your Flo Account: <b><span style="color: #333333"><%= @email %></span></b></p>
+                              <p style="margin: 15px 0 5px; color: #333333; padding: 0 40px"><a target="_blank" href="<%= @url %>" style="color: #4d98e0; text-decoration: none;"><%= @url %></a></p>
+                              <p style="margin: 15px 0 5px; color: #333333; padding: 0 40px">
+                                    To login to the site, please visit: <a href="<%= @host.to_s %>" target="_blank" style="color: #4d98e0; text-decoration: none;"><%= @host.to_s %></a>
+                              </p>
+                              <p style="margin: 15px 0 5px; color: #333333; padding: 0 40px;">
+                                    If you have questions or comments regarding your secondary email or login, please contact us at <a href="#" style="color: #4d98e0; text-decoration: none;"><%= @email_support %></a> and we will do our best to respond to you within one working day.
+                              </p>
+                              <p style="margin: 15px 0; color: #333333; padding: 0 40px;">
+                                    <p>Regards,<br />Flo Team <br/> Less Work, More Flo.</p>
+                              </p>
+                        </td>
+                  </tr>
+            </table>
+            <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top: 20px; margin-bottom: 30px; font-size: 13px;">
+			<tr>
+				<td width="33.3%" align="right">
+					<%= FOOTER_FLOWARE.html_safe %>
+				</td>
+				<td width="33.3%" align="center">
+					<a href="<%= TERMS_OF_SERVICE_LINK %>" target="_blank" style="color: #666; text-decoration: none;"><%= FOOTER_TERMS_OF_SV %></a>
+				</td>
+				<td width="33.3%" align="left">
+					<a href="<%= PRIVACY_LINK %>" target="_blank" style="color: #666; text-decoration: none;"><%= FOOTER_PRIVACY %></a>
+				</td>
+			</tr>
+		</table>
+      </div>
+  </body>
+</html>

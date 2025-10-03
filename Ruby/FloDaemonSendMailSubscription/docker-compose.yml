@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  daemon_sendmail_subs:
+    container_name: daemon_sendmail_subs
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: daemon_sendmail_subs:latest
+    environment:
+      - MYSQL_HOST=rds-dev-main.flodev.net
+      - MYSQL_USERNAME=flobackend
+      - MYSQL_PASSWORD=Ww5xjZdtFbjT3nZU
+      - EMAIL_DOMAIN=mail.flodev.net
+      - EMAIL_SERVER=mail.flodev.net
+      - EMAIL_USERNAME=support@flodev.net
+      - EMAIL_PASSWORD=cong2004
+      - EMAIL_TEMPLATE_DIR=./
+      - BASE_URL=https://flo.flodev.net

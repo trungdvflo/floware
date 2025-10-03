@@ -1,0 +1,50 @@
+pipeline {
+    agent {
+        label 'docker1.flodev.net'
+    }
+    environment {
+        ECR_AHTH_LOGIN=sh(script: "aws ecr get-login --no-include-email --region us-east-1", returnStdout: true)
+    }
+    stages {
+        stage('Build Image') {
+            agent {
+                label 'docker1.flodev.net'
+            }
+            steps {
+                sh 'docker-compose build'
+            }
+        }
+        stage('Ship to ECR') {
+            agent {
+                label 'docker1.flodev.net'
+            }
+            steps {
+                sh "${ECR_AHTH_LOGIN}"
+                sh "docker tag daemon_silent_push:latest 570744851573.dkr.ecr.us-east-1.amazonaws.com/flodaemon:daemon_silent_push"
+                sh "docker push 570744851573.dkr.ecr.us-east-1.amazonaws.com/flodaemon:daemon_silent_push"
+            }
+        }
+        stage('FloDev') {
+            agent {
+                label 'docker1.flodev.net'
+            }
+            steps {
+                sh "${ECR_AHTH_LOGIN}"
+                sh "docker pull 570744851573.dkr.ecr.us-east-1.amazonaws.com/flodaemon:daemon_silent_push"
+                // sh "ssh nghiale@docker1.flodev.net 'docker stop daemon_silent_push && docker rm daemon_silent_push'"
+                sh "cd /home/docker/flodaemon && docker-compose up -d daemon_silent_push"
+            }
+        }
+        stage('FloUat') {
+            agent {
+                label 'docker1.flouat.net'
+            }
+            steps {
+                sh "${ECR_AHTH_LOGIN}"
+                sh "docker pull 570744851573.dkr.ecr.us-east-1.amazonaws.com/flodaemon:daemon_silent_push"
+                // sh "ssh nghiale@docker1.flouat.net 'docker stop daemon_silent_push && docker rm daemon_silent_push'"
+                sh "cd /home/docker/flodaemon && docker-compose up -d daemon_silent_push"
+            }
+        }
+    }
+}

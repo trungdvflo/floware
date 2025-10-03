@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  daemon_notice_subs:
+    container_name: daemon_notice_subs
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: daemon_notice_subs:latest
+    environment:
+      - "MYSQL_HOST=rds-dev-main.flodev.net"
+      - "MYSQL_USERNAME=flobackend"
+      - "MYSQL_PASSWORD=Ww5xjZdtFbjT3nZU"

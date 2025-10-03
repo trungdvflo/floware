@@ -1,0 +1,222 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<d:multistatus xmlns:cal='urn:ietf:params:xml:ns:caldav' xmlns:cs='http://calendarserver.org/ns/' xmlns:d='DAV:' xmlns:s='http://sabredav.org/ns'>
+    <d:response>
+        <d:href>/calendarserver.php/calendars/thong%40flow-mail.com/</d:href>
+        <d:propstat>
+            <d:prop>
+                <d:current-user-principal>
+                    <d:href>/calendarserver.php/principals/thong%40flow-mail.com/</d:href>
+                </d:current-user-principal>
+                <d:resourcetype>
+                    <d:collection/>
+                </d:resourcetype>
+                <d:supported-report-set>
+                    <d:supported-report>
+                        <d:report>
+                            <d:expand-property/>
+                        </d:report>
+                    </d:supported-report>
+                    <d:supported-report>
+                        <d:report>
+                            <d:principal-property-search/>
+                        </d:report>
+                    </d:supported-report>
+                    <d:supported-report>
+                        <d:report>
+                            <d:principal-search-property-set/>
+                        </d:report>
+                    </d:supported-report>
+                </d:supported-report-set>
+            </d:prop>
+            <d:status>HTTP/1.1 200 OK</d:status>
+        </d:propstat>
+        <d:propstat>
+            <d:prop>
+                <d:displayname/>
+                <d:supported-method-set/>
+                <cal:supported-calendar-component-set/>
+                <cal:calendar-description/>
+                <cal:calendar-timezone/>
+                <cal:calendar-free-busy-set/>
+                <cs:getctag/>
+                <x4:calendar-color xmlns:x4='http://apple.com/ns/ical/'/>
+                <x4:calendar-order xmlns:x4='http://apple.com/ns/ical/'/>
+            </d:prop>
+            <d:status>HTTP/1.1 404 Not Found</d:status>
+        </d:propstat>
+    </d:response>
+    <d:response>
+        <d:href>/calendarserver.php/calendars/thong%40flow-mail.com/thongleecal/</d:href>
+        <d:propstat>
+            <d:prop>
+                <d:current-user-principal>
+                    <d:href>/calendarserver.php/principals/thong%40flow-mail.com/</d:href>
+                </d:current-user-principal>
+                <d:displayname>ThongLee's Cal</d:displayname>
+                <cal:supported-calendar-component-set>
+                    <cal:comp name='VEVENT'/>
+                    <cal:comp name='VTODO'/>
+                </cal:supported-calendar-component-set>
+                <cal:calendar-timezone>BEGIN:VCALENDAR&#13; VERSION:2.0&#13; PRODID:-//Apple Inc.//iCal 5.0.3//EN&#13; CALSCALE:GREGORIAN&#13; BEGIN:VTIMEZONE&#13; TZID:Asia/Ho_Chi_Minh&#13; BEGIN:STANDARD&#13; TZOFFSETFROM:+0800&#13; DTSTART:19310501T000000&#13; TZNAME:ICT&#13; TZOFFSETTO:+0700&#13; RDATE:19310501T000000&#13; END:STANDARD&#13; END:VTIMEZONE&#13; END:VCALENDAR&#13;</cal:calendar-timezone>
+                <cs:getctag>56</cs:getctag>
+                <x4:calendar-color xmlns:x4='http://apple.com/ns/ical/'>#711A76FF</x4:calendar-color>
+                <x4:calendar-order xmlns:x4='http://apple.com/ns/ical/'>0</x4:calendar-order>
+                <d:resourcetype>
+                    <d:collection/>
+                    <cal:calendar/>
+                </d:resourcetype>
+                <d:supported-report-set>
+                    <d:supported-report>
+                        <d:report>
+                            <d:expand-property/>
+                        </d:report>
+                    </d:supported-report>
+                    <d:supported-report>
+                        <d:report>
+                            <d:principal-property-search/>
+                        </d:report>
+                    </d:supported-report>
+                    <d:supported-report>
+                        <d:report>
+                            <d:principal-search-property-set/>
+                        </d:report>
+                    </d:supported-report>
+                    <d:supported-report>
+                        <d:report>
+                            <cal:calendar-multiget/>
+                        </d:report>
+                    </d:supported-report>
+                    <d:supported-report>
+                        <d:report>
+                            <cal:calendar-query/>
+                        </d:report>
+                    </d:supported-report>
+                    <d:supported-report>
+                        <d:report>
+                            <cal:free-busy-query/>
+                        </d:report>
+                    </d:supported-report>
+                </d:supported-report-set>
+            </d:prop>
+            <d:status>HTTP/1.1 200 OK</d:status>
+        </d:propstat>
+        <d:propstat>
+            <d:prop>
+                <d:supported-method-set/>
+                <cal:calendar-description/>
+                <cal:calendar-free-busy-set/>
+            </d:prop>
+            <d:status>HTTP/1.1 404 Not Found</d:status>
+        </d:propstat>
+    </d:response>
+    <d:response>
+        <d:href>/calendarserver.php/calendars/thong%40flow-mail.com/work/</d:href>
+        <d:propstat>
+            <d:prop>
+                <d:current-user-principal>
+                    <d:href>/calendarserver.php/principals/thong%40flow-mail.com/</d:href>
+                </d:current-user-principal>
+                <d:displayname>Work Cal</d:displayname>
+                <cal:supported-calendar-component-set>
+                    <cal:comp name='VEVENT'/>
+                    <cal:comp name='VTODO'/>
+                </cal:supported-calendar-component-set>
+                <cal:calendar-timezone>BEGIN:VCALENDAR&#13; VERSION:2.0&#13; PRODID:-//Apple Inc.//iCal 5.0.3//EN&#13; CALSCALE:GREGORIAN&#13; BEGIN:VTIMEZONE&#13; TZID:Asia/Ho_Chi_Minh&#13; BEGIN:STANDARD&#13; TZOFFSETFROM:+0800&#13; DTSTART:19310501T000000&#13; TZNAME:ICT&#13; TZOFFSETTO:+0700&#13; RDATE:19310501T000000&#13; END:STANDARD&#13; END:VTIMEZONE&#13; END:VCALENDAR&#13;</cal:calendar-timezone>
+                <cs:getctag>6</cs:getctag>
+                <x4:calendar-color xmlns:x4='http://apple.com/ns/ical/'>#B90E28FF</x4:calendar-color>
+                <x4:calendar-order xmlns:x4='http://apple.com/ns/ical/'>0</x4:calendar-order>
+                <d:resourcetype>
+                    <d:collection/>
+                    <cal:calendar/>
+                </d:resourcetype>
+                <d:supported-report-set>
+                    <d:supported-report>
+                        <d:report>
+                            <d:expand-property/>
+                        </d:report>
+                    </d:supported-report>
+                    <d:supported-report>
+                        <d:report>
+                            <d:principal-property-search/>
+                        </d:report>
+                    </d:supported-report>
+                    <d:supported-report>
+                        <d:report>
+                            <d:principal-search-property-set/>
+                        </d:report>
+                    </d:supported-report>
+                    <d:supported-report>
+                        <d:report>
+                            <cal:calendar-multiget/>
+                        </d:report>
+                    </d:supported-report>
+                    <d:supported-report>
+                        <d:report>
+                            <cal:calendar-query/>
+                        </d:report>
+                    </d:supported-report>
+                    <d:supported-report>
+                        <d:report>
+                            <cal:free-busy-query/>
+                        </d:report>
+                    </d:supported-report>
+                </d:supported-report-set>
+            </d:prop>
+            <d:status>HTTP/1.1 200 OK</d:status>
+        </d:propstat>
+        <d:propstat>
+            <d:prop>
+                <d:supported-method-set/>
+                <cal:calendar-description/>
+                <cal:calendar-free-busy-set/>
+            </d:prop>
+            <d:status>HTTP/1.1 404 Not Found</d:status>
+        </d:propstat>
+    </d:response>
+    <d:response>
+        <d:href>/calendarserver.php/calendars/thong%40flow-mail.com/outbox/</d:href>
+        <d:propstat>
+            <d:prop>
+                <d:current-user-principal>
+                    <d:href>/calendarserver.php/principals/thong%40flow-mail.com/</d:href>
+                </d:current-user-principal>
+                <d:resourcetype>
+                    <d:collection/>
+                    <cal:schedule-outbox/>
+                </d:resourcetype>
+                <d:supported-report-set>
+                    <d:supported-report>
+                        <d:report>
+                            <d:expand-property/>
+                        </d:report>
+                    </d:supported-report>
+                    <d:supported-report>
+                        <d:report>
+                            <d:principal-property-search/>
+                        </d:report>
+                    </d:supported-report>
+                    <d:supported-report>
+                        <d:report>
+                            <d:principal-search-property-set/>
+                        </d:report>
+                    </d:supported-report>
+                </d:supported-report-set>
+            </d:prop>
+            <d:status>HTTP/1.1 200 OK</d:status>
+        </d:propstat>
+        <d:propstat>
+            <d:prop>
+                <d:displayname/>
+                <d:supported-method-set/>
+                <cal:supported-calendar-component-set/>
+                <cal:calendar-description/>
+                <cal:calendar-timezone/>
+                <cal:calendar-free-busy-set/>
+                <cs:getctag/>
+                <x4:calendar-color xmlns:x4='http://apple.com/ns/ical/'/>
+                <x4:calendar-order xmlns:x4='http://apple.com/ns/ical/'/>
+            </d:prop>
+            <d:status>HTTP/1.1 404 Not Found</d:status>
+        </d:propstat>
+    </d:response>
+</d:multistatus> 

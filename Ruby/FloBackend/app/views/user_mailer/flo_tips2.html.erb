@@ -1,0 +1,41 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" /> -->
+</head>
+<body>
+	<div class="inHeader inContent" style="background-color: #f3f3f3; font-family: 'Arial'; width: 99%; min-height: 45px; height: auto; margin-top: 10px; font-size: 14px; text-align: center;">
+		<table cellpadding="0" cellspacing="0" border="0" width="90%" style="margin:20px auto; background-color: #ffffff; padding: 50px 2%; border-radius: 4px;">
+			<tr>
+				<td align="center" style="font-size:18px; color: #666666; padding-bottom: 30px;">
+					<img src="<%= @url %>logo_flo.png" height="52px" width="83px"/>
+				</td>
+			</tr>
+			<tr>
+				<td align="left" style="font-size:16px; color: #444444; line-height: 20px; padding: 0 30px;">
+					<p>You can reply, forward or create a ToDo or Event from this email.</p>
+					<p>
+						If you have any questions regarding how to use Flo please check our <a href="https://support.floware.com/hc/en-us" target="_blank">Knowledge Base</a> 
+						or post them on <a href="https://support.floware.com/hc/en-us/community/topics" target="_blank">Flo Community Forum</a> and we will do our best to respond to you within one working day.
+					</p>
+					<p>Regards,<br />Flo Team <br/> Less Work, More Flo.</p>
+				</td>
+			</tr>
+		</table>
+		<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top: 20px; margin-bottom: 30px; font-size: 13px;">
+			<tr>
+				<td width="33.3%" align="right">
+					<%= FOOTER_FLOWARE.html_safe %>
+				</td>
+				<td width="33.3%" align="center">
+					<a href="<%= TERMS_OF_SERVICE_LINK %>" target="_blank" style="color: #666; text-decoration: none;"><%= FOOTER_TERMS_OF_SV %></a>
+				</td>
+				<td width="33.3%" align="left">
+					<a href="<%= PRIVACY_LINK %>" target="_blank" style="color: #666; text-decoration: none;"><%= FOOTER_PRIVACY %></a>
+				</td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

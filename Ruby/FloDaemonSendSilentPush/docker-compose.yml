@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  daemon_silent_push:
+    container_name: daemon_silent_push
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: daemon_silent_push:latest
+    volumes:
+      - /opt/flo_apns_certificates:/opt/flo_apns_certificates
+    environment:
+      - "MYSQL_HOST=rds-dev-main.flodev.net"
+      - "MYSQL_USERNAME=flobackend"
+      - "MYSQL_PASSWORD=Ww5xjZdtFbjT3nZU"
+      - "PEM_DIR=/opt/flo_apns_certificates"

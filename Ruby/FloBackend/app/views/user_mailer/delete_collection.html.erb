@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+</head>
+<body>
+  <div class="inHeader inContent" style="background-color: #fff; font-family: 'Arial'; width: 100%; min-height: 45px; height: auto; margin-top: 10px; font-size: 14px; text-align: center;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:20px auto;border-bottom:solid 1px #ccc; background-color: #ffffff; padding: 50px 2%; border-radius: 4px;">
+      <tr>
+        <td align="left" style="font-size:18px; color: #666666;padding-left: 30px; padding-bottom: 32px;">
+          <img src="<%= ASSETS_PATH %>/logo_flo.png" height="52px" width="83px"/>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" style="font-size:16px; color: #444444; line-height: 20px; padding: 0 30px; ">
+          <!-- content here -->
+          <p>Hi,</p>
+          <p>The shared collection <%= @shared_collection_name %> and all its shared contents have been deleted and are no longer accessible.</p>
+
+          <p>Regards,<br /> Floware </p>
+        </td>
+      </tr>
+    </table>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top: 20px; margin-bottom: 30px; font-size: 13px;">
+      <tr>
+        <td width="33.3%" align="right">
+          <%= FOOTER_FLOWARE.html_safe %>
+        </td>
+        <td width="33.3%" align="center">
+          <a href="<%= TERMS_OF_SERVICE_LINK %>" target="_blank" style="color: #666; text-decoration: none;"><%= FOOTER_TERMS_OF_SV %></a>
+        </td>
+        <td width="33.3%" align="left">
+          <a href="<%= PRIVACY_LINK %>" target="_blank" style="color: #666; text-decoration: none;"><%= FOOTER_PRIVACY %></a>
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+pipeline {
+    agent {
+        label 'docker1.flodev.net'
+    }
+    environment {
+        ECR_AHTH_LOGIN=sh(script: "aws ecr get-login --no-include-email --region us-east-1", returnStdout: true)
+    }
+    stages {
+        stage('Build Image') {
+            agent {
+                label 'docker1.flodev.net'
+            }
+            steps {
+                // sh 'docker stop daemon_sendmail_subs && docker rm daemon_sendmail_subs || echo \"No existing daemon_sendmail_subs\"'
+                sh 'docker-compose build'
+            }
+        }
+        stage('Ship to ECR') {
+            agent {
+                label 'docker1.flodev.net'
+            }
+
+            steps {
+                sh "${ECR_AHTH_LOGIN}"
+                sh "docker tag daemon_sendmail_subs:latest 570744851573.dkr.ecr.us-east-1.amazonaws.com/flodaemon:daemon_sendmail_subs"
+                sh "docker push 570744851573.dkr.ecr.us-east-1.amazonaws.com/flodaemon:daemon_sendmail_subs"
+            }
+        }
+        stage('FloDev') {
+            agent {
+                label 'docker1.flodev.net'
+            }
+            steps {
+                sh "cd /home/docker/flodaemon && docker-compose up -d daemon_sendmail_subs"
+            }
+        }
+        stage('FloUat') {
+            agent {
+                label 'docker1.flouat.net'
+            }
+            steps {
+                sh "${ECR_AHTH_LOGIN}"
+                sh "docker pull 570744851573.dkr.ecr.us-east-1.amazonaws.com/flodaemon:daemon_sendmail_subs"
+                // sh "docker stop daemon_sendmail_subs && docker rm daemon_sendmail_subs || echo \"No existing daemon_sendmail_subs\"'"
+                sh "cd /home/docker/flodaemon && docker-compose up -d daemon_sendmail_subs"
+            }
+        }
+    }
+}
