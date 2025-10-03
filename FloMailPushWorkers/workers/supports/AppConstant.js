@@ -1,0 +1,6 @@
+
+module.exports = {
+  PUSH_NOTIFY_MAIL_OR_SILENT_CERT_ENV: [0, 1],
+  AWAIT_FOR_CONSUMER: 10,
+  AWAIT_FOR_CONNECT: 5000,
+};
