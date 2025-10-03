@@ -1,0 +1,22 @@
+// Override ts configuration for each worker if needed
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "outDir": "../build",
+    "baseUrl": "../",
+    "incremental": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true
+  },
+  "include": [
+    "workers/**/*",
+    "libs/decimal.min.js",
+    "test"
+  ]
+}

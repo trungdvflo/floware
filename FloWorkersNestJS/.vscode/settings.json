@@ -1,0 +1,51 @@
+{
+  "tslint.configFile": "./tslint.json",
+  "[typescript]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "cSpell.words": [
+    "CALDAV",
+    "calendarcolor",
+    "calendardata",
+    "calendarid",
+    "calendarobjects",
+    "calendarorder",
+    "calendarserver",
+    "CALSCALE",
+    "CARDAV",
+    "CSFILE",
+    "displayname",
+    "DTSTAMP",
+    "FLODAV",
+    "FLOL",
+    "floworker",
+    "Ical",
+    "invitestatus",
+    "kanban",
+    "Kanbans",
+    "lastmodified",
+    "longtext",
+    "mhoc",
+    "nestjs",
+    "omni",
+    "principaluri",
+    "PRODID",
+    "Sabredav",
+    "Subcomponent",
+    "synctoken",
+    "tinyint",
+    "typeorm",
+    "Uids",
+    "VALARM",
+    "VARBINARY",
+    "VCALENDAR",
+    "VCARD",
+    "VEVENT",
+    "VFREEBUSY",
+    "VJOURNAL",
+    "VTODO",
+    "Washabi"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended"],
+  "jsRules": {
+    "no-unused-expression": true
+  },
+  "rules": {
+    "member-access": [false],
+    "ordered-imports": [false],
+    "max-line-length": [true, 100],
+    "member-ordering": [false],
+    "interface-name": [false],
+    "arrow-parens": false,
+    "object-literal-sort-keys": false,
+    "semicolon": true,
+    "variable-name": false,
+    "max-classes-per-file": false,
+    "no-string-literal": false,
+    "no-conditional-assignment": true,
+    "no-consecutive-blank-lines": true,
+    "no-console": true,
+    "no-trailing-whitespace": true,
+    "no-unnecessary-initializer": true,
+    "no-empty": true,
+    "no-empty-interface": true,
+    "no-namespace": true,
+    "no-parameter-properties": false
+  },
+  "rulesDirectory": [],
+  "linterOptions": {
+    "exclude": [
+      "test", "**/**/test",
+      "**/*spec.ts",
+      "./workers/common/utils/*.ts",
+      "app-cluster.service.ts"
+    ]
+  }
+}

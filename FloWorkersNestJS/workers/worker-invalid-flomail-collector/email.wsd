@@ -1,0 +1,48 @@
+@startuml
+
+actor User
+
+participant "Worker/Cron Job" as Worker
+participant "IMAP Server" as Server
+participant "Database" as Database
+participant "Webhook" as Webhook
+
+User -> Worker: Setup worker starts scanning process every 24 hours
+
+activate Worker
+
+Worker -> Database: Find All email UID
+activate Database
+
+Database -> Database: Query linked_object table\nusing source_object_uid\nand destination_object_uid
+Database --> Worker: Retrieve additional linked objects
+
+Worker -> Database: Query metadata_email,\nlinked_collection_object,\nkanban_card, contact_history,\ntracking_email, trash_collection tables
+Database --> Worker: Retrieve relevant rows
+
+Worker -> Database: Make temporary table to store UID\nfor future scanning jobs
+Database --> Worker: Temporary table created
+
+loop until all object_uids processed
+    Worker -> Server: Check if email exists on IMAP server\nusing UID
+    activate Server
+    Server --> Worker: Email exists on server?
+
+    alt Email exists on server
+        Worker --> Worker: Move on to next row
+    else Email does not exist on server
+        Worker -> Database: Delete relevant rows from 7 tables
+        Database --> Worker: Relevant rows deleted
+        Worker --> Worker: Repeat steps 2-8
+    end
+end
+
+Worker -> Webhook: Trigger webhook at (worker/cron job)
+User -> Webhook: User can automatically remove\ninvalid collection links
+User -> Worker: Write a script to trigger deletion\nof Flo's email
+
+deactivate Worker
+deactivate Database
+deactivate Server
+
+@enduml

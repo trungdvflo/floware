@@ -1,0 +1,26 @@
+{
+  "language": "ts",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "workers",
+  "monorepo": true,
+  "projects": {
+    "worker-api-last-modify": {
+      "type": "application",
+      "root": "workers/worker-api-last-modify",
+      "entryFile": "main",
+      "sourceRoot": "workers/worker-api-last-modify",
+      "compilerOptions": {
+        "tsConfigPath": "workers/worker-api-last-modify/tsconfig.app.json"
+      }
+    },
+    "worker-collections": {
+      "type": "application",
+      "root": "workers/worker-collections",
+      "entryFile": "main",
+      "sourceRoot": "workers/worker-collections",
+      "compilerOptions": {
+        "tsConfigPath": "workers/worker-collections/tsconfig.app.json"
+      }
+    }
+  }
+}
