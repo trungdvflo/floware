@@ -1,0 +1,20 @@
+{
+  "testRunner": "jest-jasmine2",
+  "rootDir": "../test",
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
+  "testEnvironment": "node",
+  "testRegex": ".spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "coverageDirectory": "../report/coverage",
+  "testResultsProcessor": "jest-sonar-reporter",
+  "setupFilesAfterEnv": [
+    "jest-allure/dist/setup",
+    "<rootDir>/../test/allure-config.js"
+  ]
+}

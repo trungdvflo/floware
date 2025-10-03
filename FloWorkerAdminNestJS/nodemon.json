@@ -1,0 +1,6 @@
+{
+  "watch": ["src"],
+  "ext": ".ts,.js",
+  "ignore": [],
+  "exec": "node --nolazy -r tsconfig-paths/register -r ts-node/register/transpile-only src/index.ts"
+}

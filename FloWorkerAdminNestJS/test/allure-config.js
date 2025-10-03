@@ -1,0 +1,1 @@
+reporter.allure.setOptions({ targetDir: 'report/allure-results' });

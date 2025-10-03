@@ -1,0 +1,90 @@
+{
+  "name": "flo-worker-admin",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "worker:getList": "node build/list-worker",
+    "worker:all": "ts-node -r tsconfig-paths/register src/index.ts --name=all-worker",
+    "worker:TerminateAccount": "ts-node -r tsconfig-paths/register src/index.ts --name=terminate-account.worker",
+    "worker:ReportCachedUser": "ts-node -r tsconfig-paths/register src/index.ts --name=report-cached-user.worker",
+    "migrate:ReportCachedUser": "ts-node -r tsconfig-paths/register src/index.ts --name=report-cached-user.migrate",
+    "worker:DeleteLink": "ts-node -r tsconfig-paths/register src/index.ts --name=delete-link-invalid.worker",
+    "prebuild": "rimraf build",
+    "build": "rimraf ./build && tsc -p tsconfig.build.json",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "report:generate": "allure generate report/allure-results --clean -o report/allure-report",
+    "report:serve": "allure serve report/allure-results",
+    "lint": "tslint -p tsconfig.json -c tslint.json",
+    "test": "rimraf report && jest --config test/jest-config.json --detectOpenHandles --coverage",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.json"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.550.0",
+    "@types/app-root-path": "^1.2.4",
+    "amqplib": "^0.10.3",
+    "app-root-path": "^3.0.0",
+    "aws-sdk": "^2.1595.0",
+    "bullmq": "^2.1.2",
+    "cron": "^1.8.2",
+    "dotenv": "^10.0.0",
+    "graylog2": "^0.2.1",
+    "ioredis": "^5.3.0",
+    "moment": "^2.29.4",
+    "mysql2": "^2.3.2",
+    "re2": "^1.18.0",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.2",
+    "rxjs": "^7.2.0",
+    "socket.io-client": "^4.7.5",
+    "typeorm": "^0.3.20"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.11",
+    "@types/node": "^14.14.31",
+    "@types/supertest": "^2.0.10",
+    "@typescript-eslint/eslint-plugin": "^4.15.2",
+    "@typescript-eslint/parser": "^4.15.2",
+    "eslint": "^7.20.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "jest": "^27.3.1",
+    "jest-allure": "^0.1.3",
+    "jest-mock-extended": "^1.0.15",
+    "jest-sonar-reporter": "^2.0.0",
+    "prettier": "^2.2.1",
+    "supertest": "^6.1.3",
+    "ts-jest": "^27.0.7",
+    "ts-loader": "^8.0.17",
+    "ts-node": "^10.8.1",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^4.1.5"
+  },
+  "jestSonar": {
+    "reportPath": "report/coverage",
+    "reportFile": "test-reporter.xml",
+    "indent": 4
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
+}
