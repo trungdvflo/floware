@@ -1,0 +1,4 @@
+module.exports = {
+  SERVICE_HEALTH_CHECK_TIMEOUT:
+    process.env.SERVICE_HEALTH_CHECK_TIMEOUT ? Number(process.env.SERVICE_HEALTH_CHECK_TIMEOUT) : 1000
+};
