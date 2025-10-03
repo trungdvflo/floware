@@ -1,0 +1,35 @@
+version: "3.3"
+
+services:
+  flo-mysql:
+    image: mysql:5.7
+    container_name: flo-mysql
+    networks:
+      - flodev
+    environment:
+      MYSQL_DATABASE: flowdata
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: quangndn
+      MYSQL_PASSWORD: root
+    command:
+      [
+        "--datadir=/var/lib/mysql",
+        "--server-id=1",
+        "--log-bin=/var/lib/mysql/mysql-bin.log",
+      ]
+    ports:
+      - 3306:3306
+    restart: always
+
+  flo-adminer:
+    image: adminer
+    container_name: flo-adminer
+    restart: always
+    ports:
+      - 33061:8080
+    networks:
+      - flodev
+      
+networks:
+    flodev:
+        driver: bridge
