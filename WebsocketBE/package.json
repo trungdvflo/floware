@@ -1,0 +1,92 @@
+{
+  "name": "notification",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "lint": "tslint -p tsconfig.json -c tslint.json",
+    "fix-lint": "prettier --write 'src/**/*.ts' && tslint --fix -c ./tslint.json 'src/**/*.ts'",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.json"
+  },
+  "dependencies": {
+    "@nestjs/common": "9.3.10",
+    "@nestjs/config": "^2.2.0",
+    "@nestjs/core": "^9.3.10",
+    "@nestjs/event-emitter": "^2.0.3",
+    "@nestjs/jwt": "^10.2.0",
+    "@nestjs/microservices": "^9.3.10",
+    "@nestjs/platform-express": "^9.4.0",
+    "@nestjs/typeorm": "^9.0.1",
+    "@parse/node-apn": "^6.0.1",
+    "@socket.io/admin-ui": "^0.5.1",
+    "@socket.io/redis-adapter": "^8.2.1",
+    "@socket.io/redis-streams-adapter": "^0.1.0",
+    "amqp-connection-manager": "^3.2.0",
+    "amqplib": "^0.9.0",
+    "aws-sdk": "^2.1195.0",
+    "cache-manager": "^3.6.0",
+    "cache-manager-redis-store": "^2.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "graylog2": "^0.2.1",
+    "ioredis": "^5.3.2",
+    "mysql": "^2.18.1",
+    "redis": "^4.6.5",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.1",
+    "socket.io": "^4.7.4"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^9.0.0",
+    "@nestjs/schematics": "9.0.1",
+    "@nestjs/testing": "9.3.11",
+    "@types/express": "^4.17.17",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.0.0",
+    "@types/supertest": "^2.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.2.5",
+    "prettier": "^2.8.8",
+    "source-map-support": "^0.5.20",
+    "supertest": "^6.1.3",
+    "ts-jest": "^27.0.3",
+    "ts-loader": "^9.2.3",
+    "ts-node": "^10.0.0",
+    "tsconfig-paths": "^4.1.0",
+    "tslint": "^6.1.3",
+    "typescript": "4.7.4"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
+}

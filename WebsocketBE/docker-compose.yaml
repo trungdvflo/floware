@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - '8080:80'
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  dev:
+    image: notification-dev:1.0.0
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    command: npm run start:dev
+    ports:
+      - '3000'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+
+  dev2:
+    image: notification-dev:1.0.0
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    command: npm run start:dev
+    ports:
+      - '3000'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+
+  dev3:
+    image: notification-dev:1.0.0
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    command: npm run start:dev
+    ports:
+      - '3000'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+    # env_file:
+    #   - local.env
+    # depends_on:
+      # - db
+      # - redis
+  # db:
+  #   image: mariadb:10.5
+  #   command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+  #   restart: 'no'
+  #   volumes:
+  #     - db:/var/lib/mysql
+  #     - ./db/notification-db-20231213.sql:/docker-entrypoint-initdb.d/dump.sql
+  #   env_file:
+  #     - db.env
+  #   ports:
+  #     - 8306:3306
+  # redis:
+  #   image: 'redis:latest'
+  #   ports:
+  #     - '6379:6379'
+  #   restart: unless-stopped
+  # redis:
+  #   image: redis:7
+  #   ports:
+  #     - 8379:6379
+  #   restart: always
+  # rabbitmq:
+  #   image: rabbitmq:3-management
+  #   container_name: rabbitmq
+  #   hostname: rabbitmq
+  #   volumes:
+  #     - /var/lib/rabbitmq
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+  #   env_file:
+  #     - ./rabbitmq.env
+volumes:
+  db:

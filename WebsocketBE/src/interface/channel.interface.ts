@@ -1,0 +1,4 @@
+export enum Type {
+  CONFERENCE = 'CONFERENCE',
+  COLLECTION = 'COLLECTION',
+}
