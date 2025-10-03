@@ -1,0 +1,56 @@
+const config = {
+  tableName: 'subscription'
+};
+const Model = {
+  datastore: 'flowdataSequelize',
+  tableName: config.tableName,
+  attributes: (sequelize, DataTypes) => {
+    const Subscription = sequelize.define(
+      config.tableName,
+      {
+        id: {
+          type: DataTypes.STRING,
+          primaryKey: true,
+          autoIncrement: true
+        },
+        name: {
+          type: DataTypes.STRING,
+          required: true
+        },
+        price: {
+          type: DataTypes.FLOAT,
+          required: true,
+          default: 0
+        },
+        period: {
+          type: DataTypes.INTEGER,
+          required: true,
+          default: 0
+        },
+        auto_renew: {
+          type: DataTypes.INTEGER,
+          required: true,
+          default: 0
+        },
+        description: {
+          type: DataTypes.STRING,
+          required: true
+        },
+        subs_type: {
+          type: DataTypes.INTEGER,
+          required: true,
+          default: 0
+        },
+        order_number: {
+          type: DataTypes.INTEGER,
+          required: true,
+          default: 1
+        }
+      },
+      config
+    );
+    return Subscription;
+  }
+};
+
+module.exports = Model;

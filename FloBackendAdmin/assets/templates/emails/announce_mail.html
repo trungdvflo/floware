@@ -1,0 +1,72 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Floware - Announce Account</title>
+    <style type="text/css" media="screen">
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;1,300&display=swap');
+    </style>
+
+
+</head>
+
+
+<body
+    style="font-family: 'Roboto', 'Arial', 'sans-serif' !important; background: #f7f7f7;margin: 0 !important;padding: 0 !important;-webkit-text-size-adjust: 100% !important;-ms-text-size-adjust: 100% !important;-webkit-font-smoothing: antialiased !important;color: #000000;">
+    <div style="display: flex;justify-content: center">
+        <table style="width: calc(100% - 20px);padding: 20px 10px 12px 10px;
+            margin: 10px 10px;border-radius: 6px;background-color: #ffffff;">
+            <tr>
+                <td style="vertical-align: top">
+                    <div style="text-align: left;margin-bottom: 40px;width: 100%;">
+                        <img src="https://static-cdn.floware.com/icons/logo-flo-v2.svg" />
+                    </div>
+                    <div style=" color: #000000;font-weight: 400;line-height: 36px;font-size: 30px;">[Admin] Account Deletion Notification
+                    </div>
+                    <div style="padding: 13.6px 0 16px 0;font-weight: 400;font-size: 14px;color: #AAAAAA;">Flo Admin,
+                        {{datetime}}
+                    </div>
+                    <div style="color: #333333;line-height: 19px;font-size: 16px;">
+                        Dear All, <br /><br />On {{datetime}}, <a
+                            style="color:#3F8FAB;font-weight: bold; text-decoration: underline;"
+                            href="mailto:{{sender}}">{{sender}} </a> submitted a deletion command for the
+                        following {{noEmail}} Flo {{noEmailText}}:
+                        <div style="padding-top:16px;width:100%;">&nbsp;</div>
+                        <div
+                            style="padding: 16px 16px 16px;margin-top: 16px;border-radius: 6px;width: calc(100% - 32px);min-height: 282px;background: #F9F9F9;display: inline-block;">
+                            {{#content}}
+                            <div
+                                style="float: left;min-width: 120px;width: 60%;max-width: 300px;text-overflow: ellipsis;overflow: hidden;padding:5px;min-height: 20px;">
+                                <div style="float: left;color: #777777;width: 15%;text-align: center;">
+                                    {{no}}&nbsp;
+                                </div>
+
+                                <div style="float: left;color: #000000;text-overflow: ellipsis;overflow: hidden;width: 85%;text-align: left;"
+                                    title="{{email}}">
+                                    {{shortEmail}}
+                                </div>
+                            </div>
+                            {{/content}}
+
+                        </div>
+
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="font-size: 14px;color: #666666; line-height: 16px;text-align: left;padding-top: 22px;padding-bottom: 32px;padding-left: 10px;">This
+        email is
+        only sent to accounts with PO role in the
+        <a style="color: #000000 !important;font-weight:bold;text-decoration:underline" target="_blank" rel="noopener"
+            href="{{adminDomainUrl}}">Flo Admin
+        </a> to
+        notify that an Account Deletion command has
+        been executed.
+    </div>
+</body>
+
+</html>

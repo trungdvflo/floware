@@ -1,0 +1,115 @@
+{
+  "name": "FloBackendAdmin",
+  "version": "1.0.0",
+  "description": "Core HAPI",
+  "main": "index.js",
+  "scripts": {
+    "test:mocha": "sleep 1 && multi='progress=- mocha-allure-reporter=-' mocha --opts ./test/mocha.opts",
+    "report": "allure generate allure-results --clean -o allure-report && allure open allure-report",
+    "start": "nodemon . -q",
+    "debug": "nodemon --inspect . -q",
+    "lint": "eslint --ext .js projects"
+  },
+  "author": "Flo",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-ssm": "^3.408.0",
+    "@hapi/ammo": "^5.0.1",
+    "@hapi/good": "^9.0.1",
+    "@hapi/good-console": "^9.0.1",
+    "@hapi/good-squeeze": "^6.0.0",
+    "@hapi/hapi": "^20.2.2",
+    "@hapi/hoek": "^9.2.1",
+    "@hapi/inert": "^6.0.4",
+    "@hapi/nes": "^12.0.4",
+    "@hapi/vision": "^6.0.1",
+    "@touch4it/ical-timezones": "^1.6.0",
+    "amqplib": "^0.10.3",
+    "async": "^3.2.3",
+    "autolinker": "^3.16.2",
+    "await-async-foreach": "^1.0.3",
+    "aws-sdk": "^2.1377.0",
+    "axios": "^1.6.4",
+    "buildmail": "^4.0.1",
+    "bull": "^4.11.3",
+    "cheerio": "^1.0.0-rc.10",
+    "circular-json": "^0.5.9",
+    "cron": "^1.7.2",
+    "csv-stringify": "^5.6.2",
+    "dotenv": "^8.6.0",
+    "express-useragent": "^1.0.15",
+    "file-type": "^16.5.4",
+    "filehound": "^1.17.6",
+    "fs-extra": "^9.1.0",
+    "gelf-pro": "^1.3.6",
+    "get-env": "^0.5.10",
+    "handlebars": "^4.7.7",
+    "hapi-auth-jwt2": "^10.4.0",
+    "hapi-cors-headers": "^1.0.0",
+    "hapi-graylog": "^0.3.4",
+    "hapi-i18n": "^2.1.4",
+    "hapi-sentry": "^3.2.0",
+    "hapi-swagger": "^14.5.5",
+    "hapi-swaggered-ui": "^3.1.0",
+    "html-to-text": "^8.0.0",
+    "imap": "^0.8.19",
+    "ioredis": "^4.26.0",
+    "is-valid-json": "^1.0.2",
+    "joi": "^17.8.3",
+    "lcfirst": "^1.1.0",
+    "lodash": "^4.17.21",
+    "mailparser": "^3.6.9",
+    "md5": "^2.2.1",
+    "mime": "^3.0.0",
+    "mimelib": "^0.3.1",
+    "mkdirp": "^1.0.4",
+    "moment": "^2.29.4",
+    "mysql2": "^2.3.0",
+    "node-rsa": "^1.1.1",
+    "nodemailer": "^6.9.9",
+    "nuisance": "^2.0.1",
+    "query-string": "^6.2.0",
+    "raven": "^2.6.4",
+    "re2": "^1.20.10",
+    "semver": "^7.5.4",
+    "sequelize": "^6.32.1",
+    "stream": "0.0.2",
+    "swagger-ui-dist": "^4.1.3",
+    "uglify-js": "^3.15.4",
+    "urlencode": "^1.1.0",
+    "uuid": "^3.4.0",
+    "validator": "^13.7.0",
+    "walk": "^2.3.9"
+  },
+  "overrides": {
+    "cheerio": {
+      "cheerio-select@1.5.0": {
+        "css-select@4.1.3": {
+          "nth-check": "^2.0.1"
+        }
+      }
+    },
+    "imap": {
+      "utf7@1.0.2": {
+        "semver": "5.7.2"
+      }
+    },
+    "gelf-pro": {
+      "async": "3.2.3"
+    },
+    "nuisance": {
+      "@hapi/joi": "^17.1.1"
+    },
+    "hapi-swaggered-ui": {
+      "swagger-ui-dist": "4.19.1"
+    }
+  },
+  "devDependencies": {
+    "allure-commandline": "^2.13.8",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.24.2",
+    "xunit-viewer": "^7.1.5"
+  }
+}
