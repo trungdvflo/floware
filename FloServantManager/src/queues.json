@@ -1,0 +1,86 @@
+[
+  {
+    "name": "collectionQueue",
+    "concurrent": 8
+  },
+  {
+    "name": "calDavQueue",
+    "concurrent": 10
+  },
+  {
+    "name": "cardDavQueue",
+    "concurrent": 10
+  },
+  {
+    "name": "apiLastModifiedQueue",
+    "concurrent": 10
+   },
+  {   
+    "name": "kanbanQueue",
+    "concurrent": 8
+  },
+  {
+    "name": "fileQueue",
+    "concurrent": 10
+  },
+  {
+    "name": "thirdPartyAccountQueue",
+    "concurrent": 2
+  },
+  {
+    "name": "stepThirdPartyAccountQueue",
+    "concurrent": 2
+  },
+  {
+    "name": "fileQueue",
+    "concurrent": 10
+  },
+  {
+    "name": "trashQueue",
+    "concurrent": 3
+  },
+  {   
+    "name": "calendarObjectQueue",
+    "concurrent": 4
+  },
+  {   
+    "name": "deleteObjectQueue",
+    "concurrent": 2
+  },
+  {   
+    "name": "sortObjectQueue",
+    "concurrent": 1
+  },
+  {
+    "name": "resetOrderQueue",
+    "concurrent": 2
+  },
+  {
+    "name": "EOL_PushNotification",
+    "concurrent": 2
+  },
+  {
+    "name": "collectionDeleteEventQueue",
+    "concurrent": 2
+  },
+  {
+    "name": "collectionDeleteTodoQueue",
+    "concurrent": 2
+  },
+  {
+    "name": "collectionDeleteNoteQueue",
+    "concurrent": 2
+  },
+  {
+    "name": "collectionDeleteChildDataQueue",
+    "concurrent": 8
+  },
+  {
+    "name": "collectionCreateKanbanQueue",
+    "concurrent": 4
+  },
+  {
+    "name": "userDataMigrateQueue",
+    "concurrent": 1
+  }
+]

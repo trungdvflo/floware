@@ -1,0 +1,40 @@
+{
+  "name": "floservantmanager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf ./build && tsc",
+    "start": "npm run build && node build/index.js",
+    "start:dev": "nodemon",
+    "lint": "eslint . --ext .ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeftCoastLogic/FloServantManager.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LeftCoastLogic/FloServantManager/issues"
+  },
+  "homepage": "https://github.com/LeftCoastLogic/FloServantManager#readme",
+  "devDependencies": {
+    "@types/node": "^14.17.3",
+    "lint": "^1.1.2",
+    "nodemon": "^2.0.7",
+    "rimraf": "^3.0.2",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.3.2"
+  },
+  "dependencies": {
+    "@types/bull-arena": "^3.0.3",
+    "@types/dotenv": "^8.2.0",
+    "aws-sdk": "^2.923.0",
+    "bull-arena": "^3.29.3",
+    "bullmq": "^1.51.1",
+    "dotenv": "^8.6.0"
+  }
+}

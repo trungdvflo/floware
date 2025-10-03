@@ -1,0 +1,22 @@
+version: '3'
+services:
+  floservantmanager:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: floservantmanager:v0.1
+    env_file:
+      - ./floservantmanager.env
+    working_dir: /var/www/app
+    networks:
+      - app-network
+  redis:
+    image: redis:6.0.1-buster
+    restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
