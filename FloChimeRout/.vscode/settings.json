@@ -1,0 +1,17 @@
+{
+  "tslint.configFile": "./tslint.json",
+  "[typescript]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "cSpell.words": [
+    "bullmq",
+    "calendarid",
+    "CALID",
+    "Indexs",
+    "Kanban",
+    "nestjs",
+    "stodo"
+  ]
+}
