@@ -1,0 +1,13 @@
+{
+  "language": "ts",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "assets": [
+      "**/*.css",
+      "**/*.jpg",
+      "**/*.png",
+      "**/*.jpeg"
+    ]
+  }
+}

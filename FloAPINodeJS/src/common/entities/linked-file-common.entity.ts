@@ -1,0 +1,23 @@
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { DateCommon } from './date-common.entity';
+
+@Index('idx_user_id', ['user_id'], {})
+@Index('idx_source_id', ['source_id'], {})
+@Index('idx_source_type', ['source_type'], {})
+@Entity({ name: 'linked_file_common' })
+export class LinkedFileCommon extends DateCommon {
+  @PrimaryGeneratedColumn('increment', { name: 'id' })
+  id: number;
+
+  @Column("bigint", { width: 20 })
+  source_id: number;
+
+  @Column("varchar",{ length: 20, nullable: false})
+  source_type: string;
+
+  @Column("bigint", { width: 20 })
+  file_common_id: number;
+
+  @Column("varchar",{ length: 255, nullable: false})
+  source_uid: string;
+}
