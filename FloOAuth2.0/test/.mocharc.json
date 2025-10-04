@@ -1,0 +1,21 @@
+{
+  "diff": true,
+  "extension": [
+    "js",
+    "cjs",
+    "mjs"
+  ],
+  "exclude": [
+    "test"
+  ],
+  "include": [
+    "./projects/default/services/AccountService.js"
+  ],
+  "package": "./package.json",
+  "slow": "1000",
+  "timeout": "60000",
+  "watchFiles": [
+    "./test/**/*.spec.js"
+  ],
+  "recursive": true
+}
