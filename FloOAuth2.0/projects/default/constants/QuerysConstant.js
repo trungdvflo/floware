@@ -1,308 +1,196 @@
+const Joi = require('joi');
+
 module.exports = {
-  // # Default data Sample
-  DEF_CALENDAR_NAME: 'General',
-  DEF_CALENDAR_DESCRIPTION: 'This is Default Calendar',
-  DEF_FOLDER_NAME: 'General',
-  DEF_COLOR: '#4986e7',
-  DEF_GENERAL_TYPE: -1,
+  // CODE: Joi.number().description('The number of pages posted to the server'),
+  CODE: Joi.string().description('Functional error code'),
+  MESSAGE: Joi.string().description('The message returned to the client'),
+  /**
+     * Authorization
+     */
+  ACCESS_TOKEN: Joi.string()
+    .example(
+      'y7umlOvb-o_7bUkDs2bm2nx9rjIVHqxZaqI95BPISaazUogqI4XczjLovt'
+    )
+    .description(
+      'Access Tokens are used in token-based authentication to allow an application to access an GAPI.'
+    ),
+  REFRESH_TOKEN: Joi.string()
+    .example('iXMWPcRxhu2lQVV_9FKvz3ie_Djf-kk2PEGE')
+    .description(
+      'A Refresh Token allows the application to issue a new Access Token or ID Token without having to re-authenticate the user.'
+    ),
+  TOKEN_TYPE: Joi.string()
+    .example('Bearer')
+    .description('Authentication type of system'),
+  EXPIRY_DATE: Joi.number()
+    .example(1563955727364)
+    .description('AccessToken expiration time. Type: milliseconds'),
+  MIGRATE_STATUS: Joi.number()
+    .valid(-1, 1, 2, 3, 4)
+    .description(`User's migration status: 
+    -1 >> migrate failed
+    1 >> not yet migrate 
+    2 >> migrated data
+    3 >> migrating data`),
 
-  DEF_OMNI_CALENDAR_COLOR: '#808080',
-  DEF_OMNI_CALENDAR_NAME: 'Flo Uncollected',
-  DEF_OMNI_TYPE: -6,
+  REVERT_MIGRATE_STATUS: Joi.number()
+    .valid(3)
+    .description(`User's migration status: 
+    3 >> revert migrating data
+    `),
+  USER_HAS_FLO_MAC: Joi.number()
+    .valid(0, 1)
+    .description(`User's has Flo MAC status: 
+    0 >> Not yet have a FloMac app
+    1 >> Have a FloMac app
+    `),
+  MIGRATE_PERCENT: Joi.number()
+    .min(0)
+    .max(100)
+    .description('Migrate percent'),
+  REVERT_MIGRATE_PERCENT: Joi.number()
+    .min(0)
+    .max(100)
+    .description('Revert migrate percent'),
+  APP_ID: Joi.string()
+    .example('e70f1b125cbad944424393cf309efaf0')
+    .description('Flo app type, refer to table app_register'),
+  DEVICE_ID: Joi.string()
+    .min(1)
+    .max(100)
+    .example('29938b8b68d12d9949d6523390fcf6094183228d2e9f5079ad4a94e738ae5ac5')
+    .description('* Character identifier string of the device for push notification \n * With FloOnline, Device Token is generated at random and stored in local storage. '),
+  USER_AGENT: Joi.string()
+    .example('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.37')
+    .description('* User Agent is a web client\'s identification string when sending requests to the web server.'),
+  IP: Joi.string()
+    .example('127.0.0.1')
+    .description('* IP address connecting to the internet of the client'),
+  PLATFORM: Joi.string()
+    .example('IOS 13.2.2')
+    .description('* Information of the client\'s operating system'),
+  UUID: Joi.string()
+    .example('IOS 13.2.2')
+    .description('* (Universally Unique Identifier): A sequence of 128 bits that can guarantee uniqueness across space and time'),
+  GRANT_TYPE: Joi.string()
+    .example('password')
+    .description('* This must be password'),
+  INTERNAL_GROUP: Joi.number()
+    .valid(1, 2, 3, 4, 5, 6)
+    .description(`Test Accounts should be automatically added to correct groups
+      internal_group = 1 => add to web test group
+      internal_group = 2 => add to mac test group
+      internal_group = 3 => add to iphone test group
+      internal_group = 4 => add to ipad test group
+      internal_group = 5 => add to qa test group
+      internal_group = 6 => add to auto test group`),
+  GRANT_TYPE_REFRESH: Joi.string()
+    .example('refresh_token')
+    .description('* This must be refresh_token'),
+  PASSWORD64: Joi.string()
+    // eslint-disable-next-line max-len
+    .example('WFj2dfbdj421BrFVPoePhVlY6gmSKMZLzWJz34kxXYdlPYRbBK95YbqQ0Nt3FSHtMOpzCX6dvK+DyULvHWImqz8Ccu5JpSvzn4NWua9/h7qHdb5IUKq6FglQ==')
+    .description('* The end user\'s password with base64 formated'),
+  OAUTH_ACCESS_TOKEN: Joi.string()
+    .example('eyJhbGciOiJIUzI1oyMzEyMzEzMTMxMTMzMTIzMjB9.4PkTIItFLJW-N8uQ4u0NTD0ue4ewgx9q6mSj9oef0AQ')
+    .description(`Access tokens are the thing that applications use to make API requests on behalf of a user 
+    Format: {token}`),
+  REVOKE_TYPE: Joi.string()
+    .valid('on_device', 'all_device')
+    .example('on_device')
+    .description('* on_device: Revoke permissions on only 1 device  \n * all_device: Revoke permissions for all devices'),
+  DEVICE_UUID: Joi.string()
+    .min(36)
+    .max(36)
+    .example('E4128CA3-EB4F-45BD-ABF3-68557ECC408E')
+    .description('* Character identifier string of the device \n * With FloOnline, Device UUID is generated at random and stored in local storage. '),
+  HEADERS_ACCESS_TOKEN: Joi.object({
+    device_uid: Joi.string()
+      .min(10)
+      .max(50)
+      .example('E4128CA3-EB4F-45BD-ABF3-68557ECC408F')
+      .description('* Character identifier string of the device \n * With FloOnline, Device UUID is generated at random and stored in local storage. ')
+      .required(),
+    app_id: Joi.string()
+      .min(32)
+      .max(32)
+      .example('e70f1b125cbad944424393cf309efaf0')
+      .description('Flo app type, refer to table app_register')
+      .required(),
+    authorization: Joi.string()
+      .max(500)
+      .example('4PkTIItFLJW-N8uQ4u0NTD0ue4ewgx9q6mSj9oef0AQ')
+      .description(`Access tokens are the thing that applications use to make API requests on behalf of a user. \n Format: Bearer {token}
+    `)
+      .required(),
+    user_agent: Joi.string()
+      .max(500)
+      .example('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.35')
+      .description('* User Agent is a web client\'s identification string when sending requests to the web server.')
+      .optional()
+      .allow(null, '')
+  }).options({
+    allowUnknown: true 
+  }),
+  HEADERS_APP_ID_DEVICE_UID: Joi.object({
+    device_uid: Joi.string()
+      .min(10)
+      .max(50)
+      .example('E4128CA3-EB4F-45BD-ABF3-68557ECC408D')
+      .description('* Character identifier string of the device \n * With FloOnline, Device UUID is generated at random and stored in local storage. ')
+      .required(),
+    app_id: Joi.string()
+      .min(32)
+      .max(32)
+      .example('e70f1b125cbad944424393cf309efaf0')
+      .description('Flo app type, refer to table app_register')
+      .required(),
+    user_agent: Joi.string()
+      .max(500)
+      .example('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.34')
+      .description('* User Agent is a web client\'s identification string when sending requests to the web server.')
+      .optional()
+      .allow(null, '')
+  }).options({
+    allowUnknown: true 
+  }),
+  RESET_PASSWORD_TOKEN: Joi.string()
+    .example('7d9d482f2eebade62831683678b292c9')
+    .description('* The token to reset password'),
+  /**
+    * User Constant
+    * */
+  EMAIL: Joi.string()
+    .example('test@123flomail.net')
+    .description('User\'s email'),
 
-  // #system collection
-  DEF_SYSTEM_SOCIAL: 'Social',
-  DEF_SYSTEM_SOCIAL_COLOR: '#0092ec',
-  DEF_SYSTEM_NEWS: 'News',
-  DEF_SYSTEM_NEWS_COLOR: '#ff5253',
-  DEF_SYSTEM_SPORTS: 'Sports',
-  DEF_SYSTEM_SPORTS_COLOR: '#64dd14',
-  DEF_SYSTEM_FUN_STUFF: 'Fun Stuff',
-  DEF_SYSTEM_FUN_STUFF_COLOR: '#ff9800',
-  TIMEZONE: 'America/Chicago',
-  TIMEZONE_REPLACE_STRING: '-//tzurl.org//NONSGML Olson 2018g-rearguard//EN',
-  TIMEZONE_REPLACE_VALUE: 'icalendar-nodejs',
-  API_WELCOME_SUBJ: 'Welcome to Flo',
-  DATE_RFC2822: 'ddd, DD MMM YYYY HH:mm:ss ZZ',
-  WKHOURS: [
-    {
-      day: 'Mon', iMin: 32400, iMax: 64800 
-    },
-    {
-      day: 'Tue', iMin: 32400, iMax: 64800 
-    },
-    {
-      day: 'Wed', iMin: 32400, iMax: 64800 
-    },
-    {
-      day: 'Thu', iMin: 32400, iMax: 64800 
-    },
-    {
-      day: 'Fri', iMin: 32400, iMax: 64800 
-    },
-    {
-      day: 'Sat', iMin: 32400, iMax: 64800 
-    },
-    {
-      day: 'Sun', iMin: 32400, iMax: 64800 
-    }
-  ],
-  API_PRINCIPAL: 'principals/',
-  REAL_NAME_DAV: process.env.REAL_NAME_DAV,
-  VMAIL_PUSH_NOTI: 'vmail@localhost',
-  // # API for VObj
-  API_VEVENT: 'VEVENT',
-  API_VTODO: 'VTODO',
-  API_VJOURNAL: 'VJOURNAL',
-  API_VCALENDAR: 'VCALENDAR',
-  API_FOLDER: 'FOLDER',
-  API_LINK: 'LINK',
-  API_URL: 'URL',
-  API_TRACK: 'TRACK',
-  API_FILE: 'FILE',
-  API_TRASH: 'TRASH',
-  API_KANBAN: 'KANBAN',
-  API_EMAIL: 'EMAIL',
-  API_CANVAS_TYPE: 'CANVAS',
-  API_HISTORY_TYPE: 'HISTORY',
-  API_CONTACT_TYPE: 'VCARD',
-  API_ORDER_OBJ: 'ORDER_OBJ',
-  API_SET_3RD_ACC: 'SET_3RD_ACC',
-  API_SUGGESTED_COLLECTION: 'SUGGESTED_COLLECTION',
-  ARR_TODO_DEFAULT_iOS: [],
-  ARR_NOTE_DEFAULT_iOS: [{
-    summary: 'Quick Tip - Collections',
-    collections: [
-      {
-        name: 'General' 
-      }
-    ],
-    description: ' <p><strong><span style="font-size: 16px;">Collections are like folder or categories.... but better.</span></strong></p><ul><li><span style="font-size: 16px;">Flo lets you put different things <strong><em>(emails, notes, events, people)</em></strong> in the same Collection.</span></li></ul><p style="text-align: center;"><img src="https://static.floware.com/templates/notes/collection/colectionGeneral@3x.png" style="width: 264px;"></p><ul><li><span style="font-size: 16px;">Or you can put the same thing in different Collections.<br><br></span></li><li><span style="font-size: 16px;">Tap the menu icon in any view to choose a <strong><em>specific Collection</em></strong>.</span></li></ul><p style="text-align: center;"><span style="font-size: 16px;"><img src="https://static.floware.com/templates/notes/collection/fillter@3x.png" style="width: 268px;"></span><br></p><p style="text-align: center;"><br></p><p style="margin-left: 40px;"><span style="font-size: 16px;">For example, you can select to see just the Notes in your Work Collection.</span></p><p style="text-align: center;"><img src="https://static.floware.com/templates/notes/collection/colectionWork@3x.png" style="width: 272px;"></p><p><span style="font-size: 16px;"><br></span></p><ul><li><span style="font-size: 16px;">If you want to see everything in a <strong><em>Collection</em></strong>. Tap the Collection button in the Navigation Bar to go to the Collection.</span></li></ul><p style="text-align: center;"><img src="https://static.floware.com/templates/notes/collection/naviBar@3x.png" style="width: 269px;"></p><p style="margin-left: 40px;"><span style="font-size: 16px;">Then tap the <strong><em>icon/ title</em></strong> to pick a specific collection to view.</span></p><p style="margin-left: 40px;"><img src="https://static.floware.com/templates/notes/collection/iconTitle@3x.png" style="width: 290px;"></p><p style="margin-left: 40px;"><br></p>'
-  }, {
-    summary: 'Quick Tip - Linking',
-    collections: [
-      {
-        name: 'General' 
-      },
-      {
-        name: 'Work' 
-      }
-    ],
-    description: '<ul><li><strong><em><span style="font-size: 16px;">Link things with Flo.</span></em></strong><span style="font-size: 16px;"><br>Note to Contact. Email to ToDo.</span></li></ul><p style="text-align: center;"><img src="https://static.floware.com/templates/notes/linking/noteContactEmailTodo@3x.png" style="width: 263px;"></p><p data-empty="true" style="margin-left: 40px;"><span style="font-size: 16px;"><strong><em>Anything to anything.</em></strong><br><br></span></p><ul><li><span style="font-size: 16px;">You can automatically create linked ToDo\'s, Events and Notes.<br><strong><em>Just swipe</em></strong>&nbsp; <img src="https://static.floware.com/templates/notes/linking/swipeRight.png">&nbsp; and &nbsp;<img src="https://static.floware.com/templates/notes/linking/tap2.png">&nbsp; <strong><em>tap</em></strong>.</span><span style="font-size: 16px;"><br><br></span></li><li><span style="font-size: 16px;">You can even link an <strong><em>iCloud&nbsp;</em></strong>message to a <strong><em>Google Calendar</em></strong> event.</span></li></ul><p style="text-align: center;"><img src="https://static.floware.com/templates/notes/linking/linkIcloudGoogle@3x.png" style="width: 268px;"></p><p><br></p><p><br></p>'
-  }, {
-    summary: 'Quick Tip - Filters',
-    collections: [
-      {
-        name: 'General' 
-      },
-      {
-        name: 'Home' 
-      }
-    ],
-    description: '<ul><li><strong><em><span style="font-size: 16px;">Flo lets you filter what you see.</span></em></strong></li></ul><p style="text-align: center;"><img src="https://static.floware.com/templates/notes/filter/fillterEmail@3x.png" style="width: 262px;"></p><p style="text-align: center;"><br></p><ul><li><span style="font-size: 16px;"><strong><em>For example you can filter to see:</em></strong><br><em>All Unread Emails<br>All Starred ToDo\'s in your Work Collection<br>Recent Contacts in your Play Collection</em><br><br></span></li><li><span style="font-size: 16px;">It\'s super simple. Just <strong><em>tap the filter icon</em></strong> or <strong><em>title at the top</em></strong> of the screen to change what you want to see.</span></li></ul><p style="text-align: center;"><span style="font-size: 16px;"><img src="https://static.floware.com/templates/notes/filter/email@3x.png" style="width: 271px;"></span><br></p><p><br></p>'
-  }, {
-    summary: 'Quick Tip - Shortcuts',
-    collections: [
-      {
-        name: 'General' 
-      },
-      {
-        name: 'Play' 
-      }
-    ],
-    description: '<ul><li><span style="font-size: 16px;">Flo has a lot of <strong><em>shortcuts&nbsp;</em></strong>to let you do things quickly with one hand.<br><br></span></li><li><span style="font-size: 16px;"><strong><em>Swipe objects</em></strong> in lists to:<br><em>Create linked ToDo\'s<br>Reply to Emails<br>Delete Objects<br>And many more</em></span></li></ul><p style="text-align: center;"><img src="https://static.floware.com/templates/notes/shortcut/group20@3x.png" style="width: 273px;"></p><ul><li><span style="font-size: 16px;"><strong><em>Swipe&nbsp;</em></strong>opened emails, notes, etc to go back to a list view.</span><span style="font-size: 16px;">&nbsp;<img src="https://static.floware.com/templates/notes/shortcut/swipe@3x.png" style="width: 46px;"></span><br><span style="font-size: 16px;"><br></span></li><li><span style="font-size: 16px;">Tap on the icon in the <strong><em>Navigation Bar</em></strong> to filter what you see.</span></li></ul><p style="text-align: center;"><span style="font-size: 16px;"><img src="https://static.floware.com/templates/notes/shortcut/naviBarEmail@3x.png" style="width: 262px;"></span><br></p><ul><li><span style="font-size: 16px;"><strong><em>Rotate&nbsp;</em></strong>the Calendar to see a Week View</span></li></ul><p style="text-align: center;"><img src="https://static.floware.com/templates/notes/shortcut/calendar@3x.png" style="width: 273px;"></p><p><br></p>'
-  }],
-  ARR_CALS_DEFAULT: [{
-    displayname: 'General',
-    description: 'This is Default Calendar',
-    calendarcolor: '#4986e7',
-    proj_type: -1
-  }, {
-    displayname: 'Play',
-    description: 'Play',
-    calendarcolor: '#cd74e6',
-    proj_type: -2
-  }, {
-    displayname: 'Home',
-    description: 'Home',
-    calendarcolor: '#16a765',
-    proj_type: -3
-  },
-  // {
-  //   displayname: 'Sample',
-  //   description: 'Sample',
-  //   calendarcolor: '#d06b64',
-  //   proj_type: -4
-  // }, 
-  {
-    displayname: 'Work',
-    description: 'Work',
-    calendarcolor: '#ffad46',
-    proj_type: -5
-  }, {
-    displayname: 'Flo Uncollected',
-    description: 'Flo Uncollected',
-    calendarcolor: '#808080',
-    proj_type: ''
-  }, {
-    displayname: 'Archive',
-    description: 'Archive',
-    calendarcolor: '#d06b64',
-    proj_type: 0
-  }],
+  THIRD_PARTY_EMAIL: Joi.string()
+    .email()
+    .min(5)
+    .max(100)
+    .example('test@gmail.com')
+    .description('User\'s third-party email'),
 
-  ARR_BOOKMARKS_URL: [
-    {
-      title: 'The Wall Street Journal & Breaking News, Business, Financial and Economic News, World News and Video', url: 'https://www.wsj.com/asia', belong_to: 1 
-    },
-    {
-      title: 'The New York Times - Breaking News, World News & Multimedia', url: 'https://www.nytimes.com', belong_to: 2 
-    },
-    {
-      title: 'Yahoo News - Latest News & Headlines', url: 'https://www.yahoo.com/news', belong_to: 1 
-    },
-    {
-      title: 'USA TODAY: Latest World and US News  - USATODAY.com', url: 'https://www.usatoday.com', belong_to: 1 
-    },
-    {
-      title: 'Yahoo Sports | Sports News, Scores, Fantasy Games', url: 'https://sports.yahoo.com', belong_to: 1 
-    },
-    {
-      title: 'Expedia Travel: Search Hotels, Cheap Flights, Car Rentals & Vacations', url: 'https://www.expedia.com', belong_to: 1 
-    },
-    {
-      title: 'Digital Photography Review', url: 'https://www.dpreview.com', belong_to: 2 
-    },
-    {
-      title: 'Floware - Less Work More Flo', url: 'https://floware.com', belong_to: 2 
-    },
-    {
-      title: 'Apple', url: 'https://www.apple.com/', belong_to: 2 
-    }
-  ],
-  SYSTEM_KANBANS: [
-  {
-    color: '#007AFF',
-    sort_by_type: 3,
-    name: 'Recently Added'
-  },{
-    name: 'Email',
-    sort_by_type: 3,
-    color: '#0074b3'
-  }, {
-    name: 'Events',
-    sort_by_type: 3,
-    color: '#f94956'
-  }, {
-    name: 'ToDo\'s',
-    sort_by_type: 0,
-    color: '#7CCD2D'
-  }, {
-    name: 'Contacts',
-    sort_by_type: 1,
-    color: '#a0867d'
-  }, {
-    name: 'Calls',
-    sort_by_type: 3,
-    color: '#49BB89'
-  }, {
-    name: 'Notes',
-    sort_by_type: 3,
-    color: '#FFA834'
-  }, {
-    name: 'Websites',
-    sort_by_type: 3,
-    color: '#B658DE'
-  }, {
-    name: 'Files',
-    sort_by_type: 0,
-    color: '#969696'
-  }],
-  INFOBOX_ORDER: JSON.stringify([{
-    type: 'event', order: 1 
-  }, {
-    type: 'todo', order: 2 
-  }, {
-    type: 'note', order: 3 
-  }, {
-    type: 'email', order: 4 
-  }]),
-  EMAILBOX_ORDER: JSON.stringify([{
-    type: 'mail', order: 1, show: 1 
-  }, {
-    type: 'contact', order: 2, show: 1 
-  }]),
-  DEFAULT_SYSTEM_COLLECTION_VALUE: 1,
-  SYSTEM_COLLECTIONS: [
-    {
-      name: 'Email',
-      type: 1
-    }, {
-      name: 'Calendar',
-      type: 2
-    }, {
-      name: 'ToDo\'s',
-      type: 3
-    }, {
-      name: 'Contacts',
-      type: 4
-    }, {
-      name: 'Calls',
-      type: 10
-    }, {
-      name: 'Notes',
-      type: 5
-    }, {
-      name: 'Websites',
-      type: 6
-    }, {
-      name: 'Files',
-      type: 7
-    }, {
-      name: 'Organizer',
-      type: 8
-    }, {
-      name: 'Old Notification',
-      type: 9
-    }
-  ],
-  TEST_CONFIG_GROUPS: 
-    [
-      {
-        prefix: 'web763e90',
-        internalGroup: '1',
-        groupType: '2',
-        groupName: 'Web internal group',
-      },
-      {
-        prefix: 'mac763e90',
-        internalGroup: '2',
-        groupType: '2',
-        groupName: 'MAC internal group',
-      },
-      {
-        prefix: 'ios763e90',
-        internalGroup: '3',
-        groupType: '2',
-        groupName: 'Iphone internal group',
-      },
-      {
-        prefix: 'ipad763e90',
-        internalGroup: '4',
-        groupType: '2',
-        groupName: 'Ipad internal group',
-      },
-      {
-        prefix: 'qa763e90',
-        internalGroup: '5',
-        groupType: '2',
-        groupName: 'QA internal group',
-      },
-      {
-        prefix: 'auto763e90',
-        internalGroup: '6',
-        groupType: '2',
-        groupName: 'Auto internal group',
-      },
-    ],
+  MD5_EMAIL: Joi.string()
+    .min(32)
+    .max(32)
+    .example('94516fec34367af80809eef0a43417ef')
+    .description('User\'s email in MD5 Hash'),
+
+  TIMEZONE: Joi.string()
+    .max(100)
+    .example('Asia/Jakarta')
+    .description('Timezone of the user. Flo will use this timezone to run bug calendar and time'),
+
+  ALIAS: Joi.string()
+    .min(1)
+    .max(100)
+    .example('cbad944424393cf309efaf0e70f1b125')
+    .description('Alias of the app'),
+
+  // EMAIL
+  REVOKE_SUCCESS: Joi.boolean().example(true).description('Revoke successfully'),
+  RESET_SUCCESS: Joi.boolean().example(true).description('Reset password successfully'),
+  EMAIL_EXIST: Joi.boolean().example(true).description('Email exist status'),
+  EMPTY_DATA_ERROR: Joi.array().items()
 };
